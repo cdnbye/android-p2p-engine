@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.dueeeke.videoplayer.player.VideoView
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/offload"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="@drawable/shape_corner"
+            android:gravity="center"
+            android:text="Offload: 0.00MB"
+            />
+        <TextView
+            android:id="@+id/ratio"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="@drawable/shape_corner"
+            android:gravity="center"
+            android:text="P2P Ratio: 0%"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/upload"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="@drawable/shape_corner"
+            android:gravity="center"
+            android:text="Upload: 0.00MB"
+            />
+        <TextView
+            android:id="@+id/connected"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="@drawable/shape_corner"
+            android:gravity="center"
+            android:text="Connected: NO"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/peers"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="@drawable/shape_corner"
+            android:gravity="center"
+            android:text="Peers: 0"
+            />
+        <TextView
+            android:id="@+id/version"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="@drawable/shape_corner"
+            android:gravity="center"
+            android:text="Version:"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/peerId"
+        android:layout_height="42dp"
+        android:layout_width="match_parent"
+        android:layout_margin="8dp"
+        android:textSize="18sp"
+        android:background="@drawable/shape_corner"
+        android:gravity="center"
+        android:text="Peer ID:"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <Button
+            android:id="@+id/replay"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="#00CD00"
+            android:gravity="center"
+            android:text="Replay"
+            />
+        <Button
+            android:id="@+id/switcher"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="#A020F0"
+            android:gravity="center"
+            android:text="Switch"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <Button
+            android:id="@+id/vod"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="#87CEFA"
+            android:gravity="center"
+            android:text="VOD"
+            />
+        <Button
+            android:id="@+id/live"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="18sp"
+            android:background="#FF7F00"
+            android:gravity="center"
+            android:text="Live"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
