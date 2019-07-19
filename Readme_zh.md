@@ -12,6 +12,7 @@ P2P技术使观看相同内容的用户之间可以相互分享数据，不仅�
 - 可与CDNBye Web端[P2P插件](https://github.com/cdnbye/hlsjs-p2p-engine)和iOS端[SDK](https://github.com/cdnbye/ios-p2p-engine)互联互通
 - 支持基于HLS流媒体协议(m3u8)的直播和点播场景
 - 支持加密HLS传输
+- 支持ts文件缓存从而避免重复下载
 - 几行代码即可在现有项目中快速集成
 - 支持任何安卓播放器
 - 通过预加载形式实现P2P加速，完全不影响用户的播放体验

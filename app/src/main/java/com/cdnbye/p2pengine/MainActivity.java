@@ -17,10 +17,9 @@ import com.cdnbye.sdk.ChannelIdCallback;
 import com.cdnbye.sdk.P2pEngine;
 import com.cdnbye.sdk.P2pConfig;
 import com.cdnbye.sdk.P2pStatisticsListener;
+import com.cdnbye.sdk.LogLevel;
 
 import java.util.List;
-
-
 
 
 public class MainActivity extends Activity {
@@ -29,9 +28,12 @@ public class MainActivity extends Activity {
     private StandardVideoController controller;
     private final String TAG = "MainActivity";
 
-    private final String VOD = "https://www.solezy.me/20190328/SrgSISNS/index.m3u8";
+//    private final String VOD = "https://www.solezy.me/20190328/SrgSISNS/index.m3u8";
+    private final String VOD = "https://youku.rebo5566.com/20190718/WGiwgA41/index.m3u8";
 //    private final String VOD = "http://opentracker.cdnbye.com:2100/20190513/Hm8R9WIB/index.m3u8";
     private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
+//    private final String LIVE = "https://p2p.o8.cx/live/jade.m3u8";
+//    private final String LIVE = "http://120.79.208.124:8080/live/jade.m3u8";
 
     private Button replayBtn;
     private Button switchBtn;
@@ -53,8 +55,10 @@ public class MainActivity extends Activity {
         versionV.setText("Version: " + P2pEngine.Version);
 
         P2pConfig config = new P2pConfig.Builder()
-                .enableLog(true)
-                .logLevel(Log.DEBUG)
+                .p2pEnabled(true)
+                .logEnabled(true)
+                .logLevel(LogLevel.DEBUG)
+                .announce("https://tracker.cdnbye.com:8090/v1")
                 .build();
         P2pEngine engine = P2pEngine.initEngine(this, "free", config);
         engine.addP2pStatisticsListener(new P2pStatisticsListener() {
@@ -169,9 +173,9 @@ public class MainActivity extends Activity {
         videoView.setUrl(parsedUrl); //设置视频地址
 
         // 使用IjkPlayer解码
-        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
+//        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
         // 使用ExoPlayer解码
-//        videoView.setPlayerFactory(ExoMediaPlayerFactory.create(this));
+        videoView.setPlayerFactory(ExoMediaPlayerFactory.create(this));
         // 使用MediaPlayer解码
 //        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
 

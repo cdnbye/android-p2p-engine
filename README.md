@@ -12,6 +12,7 @@ CDNBye Android P2P Engine scales live/vod video streaming by peer-to-peer networ
 - Interconnect with CDNBye [hlsjs-p2p-engine](https://github.com/cdnbye/hlsjs-p2p-engine) and [ios-p2p-engine](https://github.com/cdnbye/ios-p2p-engine)
 - Support live and VOD streams over HLS protocol(m3u8)
 - Support encrypted HLS stream
+- Support cache to avoid repeating the download of TS file
 - Very easy to  integrate with an existing Android Mobile and Android TV project
 - Support any Android player
 - Efficient scheduling policies to enhance the performance of P2P streaming
