@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
     private VideoView videoView;
     private StandardVideoController controller;
 
-    private final String VOD = "https://youku.rebo5566.com/20190718/WGiwgA41/1000kb/hls/index.m3u8";
+    private final String VOD = "https://iqiyi.com-t-iqiyi.com/20190722/5120_0f9eec31/index.m3u8";
     private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
 
     private Button replayBtn;
@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
     private Button vodBtn;
     private Button liveBtn;
     private String currentUrl = VOD;
+//    private String currentUrl = LIVE;
 
     private double totalHttpDownloaded = 0;
     private double totalP2pDownloaded = 0;
@@ -57,7 +58,6 @@ public class MainActivity extends Activity {
         engine.addP2pStatisticsListener(new P2pStatisticsListener() {
             @Override
             public void onHttpDownloaded(long value) {
-//                Log.d("TAG", "httpDownloaded: " + value);
                 totalHttpDownloaded += (double)value;
                 refreshRatio();
                 checkIfConnected();
@@ -167,11 +167,11 @@ public class MainActivity extends Activity {
 //        videoView.setUrl(VOD); //设置视频地址
 
         // 使用IjkPlayer解码
-//        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
+        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
         // 使用ExoPlayer解码
 //        videoView.setPlayerFactory(ExoMediaPlayerFactory.create(this));
         // 使用MediaPlayer解码
-        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
+//        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
 
         if (controller == null) {
             controller = new StandardVideoController(this);
