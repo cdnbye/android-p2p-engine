@@ -27,14 +27,14 @@ public class MainActivity extends Activity {
     private StandardVideoController controller;
 
     private final String VOD = "https://iqiyi.com-t-iqiyi.com/20190722/5120_0f9eec31/index.m3u8";
-    private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8?a=123";
+    private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
 
     private Button replayBtn;
     private Button switchBtn;
     private Button vodBtn;
     private Button liveBtn;
-//    private String currentUrl = VOD;
-    private String currentUrl = LIVE;
+    private String currentUrl = VOD;
+//    private String currentUrl = LIVE;
 
     private double totalHttpDownloaded = 0;
     private double totalP2pDownloaded = 0;
