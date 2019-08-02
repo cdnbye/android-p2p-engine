@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.cdnbye.**
+-keep class com.cdnbye.**{*;}
+-keep interface com.cdnbye.**{*;}
+-dontwarn org.webrtc.**
+-keep class org.webrtc.**{*;}

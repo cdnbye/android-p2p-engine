@@ -33,8 +33,8 @@ public class MainActivity extends Activity {
     private Button switchBtn;
     private Button vodBtn;
     private Button liveBtn;
-    private String currentUrl = VOD;
-//    private String currentUrl = LIVE;
+//    private String currentUrl = VOD;
+    private String currentUrl = LIVE;
 
     private double totalHttpDownloaded = 0;
     private double totalP2pDownloaded = 0;
@@ -167,11 +167,11 @@ public class MainActivity extends Activity {
 //        videoView.setUrl(VOD); //设置视频地址
 
         // 使用IjkPlayer解码
-        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
+//        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
         // 使用ExoPlayer解码
 //        videoView.setPlayerFactory(ExoMediaPlayerFactory.create(this));
         // 使用MediaPlayer解码
-//        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
+        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
 
         if (controller == null) {
             controller = new StandardVideoController(this);
