@@ -27,14 +27,14 @@ public class MainActivity extends Activity {
     private StandardVideoController controller;
 
     private final String VOD = "https://iqiyi.com-t-iqiyi.com/20190722/5120_0f9eec31/index.m3u8";
-    private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
+    private final String LIVE = "http://aplay.gztv.com/sec/zhonghe.m3u8?txSecret=a777cb396c8c9c82251f4c8c389cf141&txTime=1560699724934";
 
     private Button replayBtn;
     private Button switchBtn;
     private Button vodBtn;
     private Button liveBtn;
-//    private String currentUrl = VOD;
-    private String currentUrl = LIVE;
+    private String currentUrl = VOD;
+//    private String currentUrl = LIVE;
 
     private double totalHttpDownloaded = 0;
     private double totalP2pDownloaded = 0;
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
                 .logEnabled(true)
                 .logLevel(LogLevel.DEBUG)
                 .build();
-        P2pEngine engine = P2pEngine.initEngine(this, "free", config);
+        P2pEngine engine = P2pEngine.initEngine(getApplicationContext(), "free", config);
         engine.addP2pStatisticsListener(new P2pStatisticsListener() {
             @Override
             public void onHttpDownloaded(long value) {
@@ -167,11 +167,11 @@ public class MainActivity extends Activity {
 //        videoView.setUrl(VOD); //设置视频地址
 
         // 使用IjkPlayer解码
-//        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
+        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
         // 使用ExoPlayer解码
 //        videoView.setPlayerFactory(ExoMediaPlayerFactory.create(this));
         // 使用MediaPlayer解码
-        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
+//        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
 
         if (controller == null) {
             controller = new StandardVideoController(this);

@@ -20,7 +20,7 @@ CDNBye Android P2P Engine scales live/vod video streaming by peer-to-peer networ
 - Use IP database to group up peers by ISP and regions
 
 ## Requirements
-Android Version Support: Jelly Bean 4.3(API level >= 18)
+Android Version Support: Kitkat 4.4(API level >= 19)
 
 ## Integration
 See [document](https://docs.cdnbye.com/#/en/android/usage)
