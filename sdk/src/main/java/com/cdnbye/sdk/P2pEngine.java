@@ -148,14 +148,6 @@ public final class P2pEngine {
                 return url;
             }
 
-//            // 启动本地服务器
-//            try {
-//                startLocalServer();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return url;
-//            }
-
             String m3u8Name = originalURL.getPath();
             localUrlStr = String.format(Locale.ENGLISH, "%s:%d%s", LOCAL_IP, currentPort, m3u8Name);
         } catch (MalformedURLException e) {
@@ -368,7 +360,6 @@ public final class P2pEngine {
         }
 
         isServerRunning = true;
-
 
         Logger.d("Listen at port: " + currentPort);
 
