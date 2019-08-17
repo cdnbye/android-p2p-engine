@@ -1,8 +1,7 @@
 package com.cdnbye.sdk;
 
-import org.webrtc.PeerConnection.RTCConfiguration;
-
 import java.util.concurrent.TimeUnit;
+import org.webrtc.PeerConnection.RTCConfiguration;
 
 public class P2pConfig {
 
@@ -63,6 +62,14 @@ public class P2pConfig {
         return webRTCConfig;
     }
 
+    public int getMaxPeerConns() {
+        return maxPeerConnections;
+    }
+
+    public int getMemoryCacheLimit() {
+        return memoryCacheLimit;
+    }
+
     private String announce;
     private String wsSignalerAddr;
     private String mTag;
@@ -78,6 +85,8 @@ public class P2pConfig {
     private boolean  debug;
     private int localPort;
     private RTCConfiguration webRTCConfig;
+    private int maxPeerConnections;
+    private int memoryCacheLimit;
 
     private P2pConfig(Builder builder) {
         this.announce = builder.announce;
@@ -94,6 +103,8 @@ public class P2pConfig {
         this.logLevel = builder.logLevel;
         this.channelId = builder.channelId;
         this.webRTCConfig = builder.webRTCConfig;
+        this.maxPeerConnections = builder.maxPeerConnections;
+        this.memoryCacheLimit = builder.memoryCacheLimit;
     }
 
     public static class Builder {
@@ -111,6 +122,8 @@ public class P2pConfig {
         private LogLevel logLevel = LogLevel.WARN;              // ASSERT = 7; DEBUG = 3; ERROR = 6;INFO = 4;VERBOSE = 2;WARN = 5;
         private boolean debug = false;
         private RTCConfiguration webRTCConfig;                   // 需要判空
+        private int maxPeerConnections = 10;
+        private int memoryCacheLimit = 60 * 1024 *1024;
 
         public Builder announce(String announce) {
             this.announce = announce;
@@ -155,7 +168,7 @@ public class P2pConfig {
             return this;
         }
 
-        public Builder maxBufferSize(long maxBufferSize) {
+        public Builder diskCacheLimit(long maxBufferSize) {
             this.maxBufferSize = maxBufferSize;
             return this;
         }
@@ -185,8 +198,19 @@ public class P2pConfig {
             return this;
         }
 
+        public Builder maxPeerConnections(int conns) {
+            this.maxPeerConnections = conns;
+            return this;
+        }
+
+        public Builder memoryCacheLimit(int size) {
+            this.memoryCacheLimit = size;
+            return this;
+        }
+
         public P2pConfig build() {
             return new P2pConfig(this);
         }
+
     }
 }

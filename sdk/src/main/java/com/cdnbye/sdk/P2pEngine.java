@@ -1,11 +1,15 @@
 package com.cdnbye.sdk;
 
 import android.content.Context;
-//import android.support.annotation.NonNull;
-//import android.support.annotation.Nullable;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import com.cdnbye.core.logger.LoggerUtil;
 import com.cdnbye.core.m3u8.Parser;
@@ -13,21 +17,12 @@ import com.cdnbye.core.p2p.DataChannel;
 import com.cdnbye.core.p2p.PCFactory;
 import com.cdnbye.core.segment.HttpLoader;
 import com.cdnbye.core.segment.Segment;
-import com.cdnbye.core.segment.SegmentLoaderCallback;
 import com.cdnbye.core.tracking.TrackerClient;
 import com.cdnbye.core.utils.CBTimer;
 import com.cdnbye.core.utils.HttpHelper;
 import com.cdnbye.core.utils.UtilFunc;
-import com.koushikdutta.async.AsyncServerSocket;
-import com.koushikdutta.async.http.server.AsyncHttpServer;
-import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
-import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
-import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 import com.orhanobut.logger.Logger;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Locale;
+import fi.iki.elonen.NanoHTTPD;
 
 public final class P2pEngine {
 
@@ -42,8 +37,9 @@ public final class P2pEngine {
     private String localUrlStr;
     private int prefetchSegs = 0;
     private boolean isvalid = true;
-    private AsyncHttpServer localServer;
-    private boolean isServerRunning;
+    private HttpServer localServer;
+    private boolean isServerRunning;               // 代理服务器是否正常运行
+    private int urlParseCount = 0;                 // 转化URL的次数
     private int currentPort;
     private TrackerClient tracker;
     private P2pStatisticsListener listener;
@@ -123,7 +119,8 @@ public final class P2pEngine {
     public String parseStreamUrl(@NonNull String url) {
         Logger.d("parseStreamUrl");
 
-        long startTime =  System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
+        urlParseCount++;
 
         try {
             this.originalURL = new URL(url);
@@ -132,6 +129,10 @@ public final class P2pEngine {
             restartP2p();
 
             if (!isvalid) {
+                return url;
+            }
+            if (originalURL.getPath() == null || originalURL.getPath().equals("")) {
+                Logger.e("Url path is null!");
                 return url;
             }
             if (!config.getP2pEnabled()) {
@@ -143,10 +144,17 @@ public final class P2pEngine {
                 return url;
             }
 
-            if (isServerRunning == false) {
+            if (!isServerRunning) {
                 Logger.e("Local server is not running");
                 return url;
             }
+
+            // 一定次数后重启代理服务器 test
+//            if (urlParseCount >= 5) {
+//                Logger.i("restart local server");
+//                startLocalServer();
+//                urlParseCount = 0;
+//            }
 
             String m3u8Name = originalURL.getPath();
             localUrlStr = String.format(Locale.ENGLISH, "%s:%d%s", LOCAL_IP, currentPort, m3u8Name);
@@ -157,8 +165,8 @@ public final class P2pEngine {
         }
         Logger.d("localUrlStr: " + localUrlStr);
 
-        long endTime =  System.currentTimeMillis();
-        long usedTime = endTime-startTime;
+        long endTime = System.currentTimeMillis();
+        long usedTime = endTime - startTime;
         Logger.i("parseStreamUrl usedTime " + usedTime);
 
         return localUrlStr;
@@ -182,6 +190,15 @@ public final class P2pEngine {
             tracker = null;
         }
         prefetchSegs = 0;
+        currPlaylist = "";
+        if (!isServerRunning) {
+            // 重启代理服务器
+            try {
+                startLocalServer();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // 初始化各个组件
@@ -204,30 +221,67 @@ public final class P2pEngine {
 
     private void startLocalServer() {
 
-        AsyncHttpServer server = new AsyncHttpServer();
+        if (isServerRunning && localServer != null) {
+            localServer.stop();
+        }
 
-        this.localServer = server;
+        while (true) {
+            try {
+                localServer = new HttpServer(currentPort);
+                if (localServer.wasStarted()) {
+                    isServerRunning = true;
+                }
+                break;
+            } catch (IOException e) {
+                e.printStackTrace();
+                currentPort++;
+                if (currentPort > 65535) {
+                    throw new RuntimeException("port number is greater than 65535");
+                }
+            }
+        }
 
-        // m3u8处理器
-        server.get("^/.*\\.m3u8$", new HttpServerRequestCallback() {
-            @Override
-            public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
-                Logger.i("request m3u8 " + request.getPath());
+        Logger.i("Listen at port: " + currentPort);
+    }
 
 
-                long startTime =  System.currentTimeMillis();
+    private void initTrackerClient() throws Exception {
+        if (tracker != null) return;
+        Logger.i("Init tracker");
+        // 拼接channelId，并进行url编码和base64编码
+        String encodedChannelId = UtilFunc.getChannelId(originalURL.toString(), config.getWsSignalerAddr(), DataChannel.DC_VERSION, config.getChannelId());
+//        Logger.i("encodedChannelId: " + encodedChannelId);
+        TrackerClient trackerClient = new TrackerClient(token, encodedChannelId, config, listener);
+        this.tracker = trackerClient;
+        trackerClient.doChannelReq();
+    }
 
+    class HttpServer extends NanoHTTPD {
+
+        public HttpServer(int port) throws IOException {
+            super(port);
+            start();
+            Logger.w("MyServer", "\nRunning! Point your browsers to [http://0.0.0.0:33445/](http://localhost:33445/)\n");
+        }
+
+        @Override
+        public Response serve(IHTTPSession session) {
+
+            String uri = session.getUri();
+            Logger.d("session uri " + uri);
+            if (uri.endsWith(".m3u8")) {
+                // m3u8处理器
+                String mimeType = "application/vnd.apple.mpegurl";
                 try {
-                    if (request.getPath().equals(currPlaylist)) {
+                    if (session.getUri().equals(currPlaylist)) {
                         // 非第一次m3u8请求
-
+                        Logger.d("非第一次m3u8请求");
                     } else {
                         // 第一次m3u8请求
+                        Logger.d("第一次m3u8请求");
                         parser = new Parser(originalURL.toString());
-                        currPlaylist = request.getPath();
+                        currPlaylist = session.getUri();
                     }
-//                    Parser parser = new Parser(originalURL.toString());
-
                     String sPlaylist = parser.getMediaPlaylist();
 //                    Logger.d("playlist: " + sPlaylist);
                     Logger.i("receive m3u8");
@@ -236,61 +290,57 @@ public final class P2pEngine {
                     if (!parser.isLive()) {
                         TrackerClient.setEndSN(parser.getEndSN());
                     }
-
-                    long endTime =  System.currentTimeMillis();
-                    long usedTime = endTime-startTime;
-                    Logger.i("m3u8 request usedTime " + usedTime);
-
-                    response.send("application/vnd.apple.mpegurl", sPlaylist);
+                    return newFixedLengthResponse(Response.Status.OK, mimeType, sPlaylist);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Logger.w("m3u8 request redirect to " + originalURL.toString());
-                    response.redirect(originalURL.toString());
+                    Response resp = newFixedLengthResponse(Response.Status.REDIRECT, mimeType, null);
+                    resp.addHeader("Location", parser.getOriginalURL().toString());
+                    return resp;
                 }
-            }
-        });
-
-        // ts处理器
-        server.get("^/.*\\.(ts|jpg|js)$", new HttpServerRequestCallback() {
-            @Override
-            public void onRequest(final AsyncHttpServerRequest request, final AsyncHttpServerResponse response) {
-                String lastPath = request.getPath().substring(request.getPath().lastIndexOf('/') + 1);
+            } else if (uri.endsWith("ts") || uri.endsWith("jpg") || uri.endsWith("js")) {
+                // ts处理器
+                String lastPath = uri.substring(uri.lastIndexOf('/') + 1);
                 Logger.i("player request ts: %s", lastPath);
                 final String segId = lastPath.split("\\.")[0];
-                final String rawTSUrl = request.getQuery().getString("url");
-                float duration = Float.parseFloat(request.getQuery().getString("duration"));
-//                String tsUrl = UtilFunc.decodeURIComponent(rawTSUrl);
-//                Logger.d("ts url: %s segId: %s", rawTSUrl, segId);
-                final Segment seg = new Segment(segId, rawTSUrl, duration);
-
+                final String rawTSUrl = session.getParameters().get("url").get(0);
+                float duration = Float.parseFloat(session.getParameters().get("duration").get(0));
+                String tsUrl = UtilFunc.decodeURIComponent(rawTSUrl);
+                Logger.d("ts url: %s segId: %s tsUrl: %s", rawTSUrl, segId, tsUrl);
+                Segment seg = new Segment(segId, rawTSUrl, duration);
+                Map<String, String> headers = new HashMap<>();
+                if (session.getHeaders().get("range") != null) {
+                    headers.put("Range", session.getHeaders().get("range"));
+                    Logger.i("Range: " + headers.get("Range"));
+                }
                 if (isConnected() && config.getP2pEnabled()) {
                     // scheduler loadSegment
                     Logger.i("scheduler load " + segId);
 
                     synchronized (seg) {
                         try {
-                            tracker.getScheduler().loadSegment(seg, request);
+                            tracker.getScheduler().loadSegment(seg, headers);
 //                            seg.wait(config.getDownloadTimeout());
                             seg.wait();
                             if (seg.getBuffer() != null && seg.getBuffer().length > 0) {
-                                Logger.i("engine onResponse: " + seg.getBuffer().length + " contentType: " + seg.getContentType() + " segId " + seg.getSegId());
+                                Logger.i("scheduler onResponse: " + seg.getBuffer().length + " contentType: " + seg.getContentType() + " segId " + seg.getSegId());
 //                                Logger.i(segId + " sha1:" + UtilFunc.getStringSHA1(seg.getBuffer()));
-                                response.send(seg.getContentType(), seg.getBuffer());
+                                return newFixedLengthResponse(Response.Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()), seg.getBuffer().length);
                             } else {
                                 Logger.w("request ts failed, redirect to " + rawTSUrl);
-                                response.redirect(rawTSUrl);
+                                throw new Exception("scheduler request ts failed");
                             }
-                        } catch (InterruptedException e) {
-                            Logger.i("wait InterruptedException");
+                        } catch (Exception e) {
                             e.printStackTrace();
-                            response.redirect(rawTSUrl);
+                            Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
+                            resp.addHeader("Location", rawTSUrl);
+                            return resp;
                         }
                     }
 
                 } else {
-
-                    prefetchSegs ++;
+                    prefetchSegs++;
                     if (tracker == null && config.getP2pEnabled() && prefetchSegs == PREFETCH_SEGMENTS && isvalid) {
                         synchronized (this) {
                             try {
@@ -301,7 +351,6 @@ public final class P2pEngine {
                             }
                         }
                     }
-
                     // 如果tracker还没连上ws则直接请求ts
                     Logger.d("engine loadSegment " + segId);
 
@@ -310,72 +359,42 @@ public final class P2pEngine {
                     CBTimer.getInstance().updateBaseTime();
                     CBTimer.getInstance().updateAvailableSpanWithBufferTime(bufferTime);
 
-                    HttpLoader.loadSegmentSync(seg, request, new SegmentLoaderCallback() {
-                        @Override
-                        public void onFailure(String segId) {
-                            Logger.w("request ts failed, redirect to " + rawTSUrl);
-                            response.redirect(rawTSUrl);
+                    HttpLoader.loadSegmentSync(seg, headers);
+                    try {
+                        seg.wait();
+                        if (seg.getBuffer() != null && seg.getBuffer().length > 0) {
+                            Logger.i("engine onResponse: " + seg.getBuffer().length + " contentType: " + seg.getContentType() + " segId " + seg.getSegId());
+//                                Logger.i(segId + " sha1:" + UtilFunc.getStringSHA1(seg.getBuffer()));
+                            if (listener != null) {
+                                listener.onHttpDownloaded(seg.getBuffer().length / 1024);
+                            }
+                            return newFixedLengthResponse(Response.Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()), seg.getBuffer().length);
+                        } else {
+                            Logger.w("engine request ts failed, redirect to " + rawTSUrl);
+                            throw new Exception("scheduler request ts failed");
                         }
-
-                        @Override
-                        public void onResponse(final byte[] data, String contentType) {
-                            Logger.i("engine onResponse: " + data.length + " contentType: " + contentType);
-//                            respCount ++;
-                            if (listener != null) listener.onHttpDownloaded(data.length/1024);
-                            response.send(contentType, data);
-                        }
-                    });
+                    } catch (Exception e) {
+                        Response resp = newFixedLengthResponse(Response.Status.REDIRECT, seg.getContentType(), null);
+                        resp.addHeader("Location", rawTSUrl);
+                        return resp;
+                    }
                 }
-
-
-            }
-        });
-
-        // 其他文件处理器(key)
-        server.get("^/.*(?<!(.ts|.m3u8|.jpg|.js))$", new HttpServerRequestCallback() {
-            @Override
-            public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
-//                Logger.d("request key");
+            } else {
+                // 其他文件处理器(key)
                 URL url = null;
                 try {
-                    url = new URL(originalURL, request.getPath());
+                    url = new URL(originalURL, session.getUri());
                     Logger.d("key url: " + url.toString());
-//                    response.send(url.toString());
-                    response.redirect(url.toString());
+
+                    Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
+                    resp.addHeader("Location", url.toString());
+                    return resp;
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             }
-        });
 
-
-        AsyncServerSocket socket = server.listen(currentPort);
-
-        while(null == socket && currentPort <=65535){
-            currentPort ++;
-            socket = server.listen(currentPort);
+            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "", "");
         }
-        if(currentPort > 65535){
-            throw  new RuntimeException("port number is greater than 65535");
-        }
-
-        isServerRunning = true;
-
-        Logger.d("Listen at port: " + currentPort);
-
     }
-
-
-
-    private void initTrackerClient() throws Exception {
-        if (tracker != null) return;
-        Logger.i("Init tracker");
-        // 拼接channelId，并进行url编码和base64编码
-        String encodedChannelId = UtilFunc.getChannelId(originalURL.toString(), config.getWsSignalerAddr(), DataChannel.DC_VERSION, config.getChannelId());
-        Logger.i("encodedChannelId: " + encodedChannelId);
-        TrackerClient trackerClient = new TrackerClient(token, encodedChannelId, config, listener);
-        this.tracker = trackerClient;
-        trackerClient.doChannelReq();
-    }
-
 }
