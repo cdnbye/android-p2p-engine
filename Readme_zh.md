@@ -37,6 +37,7 @@ P2P技术使观看相同内容的用户之间可以相互分享数据，不仅�
 ## 相关项目
 - [hlsjs-p2p-engine](https://github.com/cdnbye/hlsjs-p2p-engine) - 目前最好的Web端P2P流媒体方案。
 - [ios-p2p-engine](https://github.com/cdnbye/ios-p2p-engine) - iOS端P2P流媒体加速引擎。
+- [flutter-p2p-engine](https://github.com/cdnbye/flutter-p2p-engine) - Flutter视频/直播APP省流量&加速神器, 由[mjl0602](https://github.com/mjl0602)贡献。
 
 ## FAQ
 我们收集了一些[常见问题](https://docs.cdnbye.com/#/FAQ)。在报告issue之前请先查看一下。

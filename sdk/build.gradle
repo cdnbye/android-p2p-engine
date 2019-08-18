@@ -63,11 +63,11 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 publish {
-    userOrg = properties.getProperty("bintray.user")                      // Binary用户名
-    repoName = 'maven'                      // Binary上的刚才新建的仓库名（Repository）
-    groupId = 'com.cdnbye'                 // 依赖名compile 'x:y:z'中的包名x
-    artifactId = 'sdk'                     // 依赖名compile 'x:y:z'中的项目名y
-    publishVersion = SDK_VERSION            // 依赖名compile 'x:y:z'中的版本号z
-    desc = 'Live/VOD P2P Engine for Android and Android TV'            // 对该开源组件的说明
-    website = 'https://github.com/cdnbye/android-p2p-engine'  // VCS地址，即填写项目上传的Github地址
+    userOrg = properties.getProperty("bintray.user")
+    repoName = 'maven'
+    groupId = 'com.cdnbye'
+    artifactId = 'sdk'
+    publishVersion = SDK_VERSION
+    desc = 'Live/VOD P2P Engine for Android and Android TV'
+    website = 'https://github.com/cdnbye/android-p2p-engine'
 }

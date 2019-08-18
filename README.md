@@ -14,7 +14,7 @@ CDNBye Android P2P Engine scales live/vod video streaming by peer-to-peer networ
 - Support live and VOD streams over HLS protocol(m3u8)
 - Support encrypted HLS stream
 - Support cache to avoid repeating the download of TS file
-- Very easy to  integrate with an existing Android Mobile and Android TV project
+- Very easy to integrate with an existing Android Mobile and Android TV project
 - Support any Android player
 - Efficient scheduling policies to enhance the performance of P2P streaming
 - Highly configurable
@@ -36,6 +36,7 @@ See [API.md](https://docs.cdnbye.com/#/android/API)
 ## Related Projects
 - [hlsjs-p2p-engine](https://github.com/cdnbye/hlsjs-p2p-engine) - Web Video Delivery Technology with No Plugins.
 - [ios-p2p-engine](https://github.com/cdnbye/ios-p2p-engine) -  iOS Video P2P Engine for Any Player.
+- [flutter-p2p-engine](https://github.com/cdnbye/flutter-p2p-engine) - Live/VOD P2P Engine for Flutter, contributed by [mjl0602](https://github.com/mjl0602)
 
 ## FAQ
 We have collected some [frequently asked questions](https://docs.cdnbye.com/#/en/FAQ). Before reporting an issue, please search if the FAQ has the answer to your problem.
