@@ -1,6 +1,6 @@
 **[English](README.md) | 简体中文**
 
-<h1 align="center"><a href="" target="_blank" rel="noopener noreferrer"><img width="250" src="https://github.com/cdnbye/hlsjs-p2p-engine/blob/master/figs/cdnbye.png" alt="cdnbye logo"></a></h1>
+<h1 align="center"><a href="" target="_blank" rel="noopener noreferrer"><img width="250" src="https://cdnbye.oss-cn-beijing.aliyuncs.com/pic/cdnbye.png" alt="cdnbye logo"></a></h1>
 <h4 align="center">视频/直播APP省流量&加速神器.</h4>
 <p align="center">
 <a href="https://bintray.com/cdnbye/maven/sdk/_latestVersion"><img src="https://api.bintray.com/packages/cdnbye/maven/sdk/images/download.svg?style=flat" alt="jcenter"></a>
@@ -35,9 +35,9 @@ P2P技术使观看相同内容的用户之间可以相互分享数据，不仅�
 当你遇到任何问题时，可以通过在 GitHub 的 repo 提交 issues 来反馈问题，请尽可能的描述清楚遇到的问题，如果有错误信息也一同附带，并且在 Labels 中指明类型为 bug 或者其他。
 
 ## 相关项目
-- [hlsjs-p2p-engine](https://github.com/cdnbye/hlsjs-p2p-engine) - 目前最好的Web端P2P流媒体方案。
 - [ios-p2p-engine](https://github.com/cdnbye/ios-p2p-engine) - iOS端P2P流媒体加速引擎。
-- [flutter-p2p-engine](https://github.com/cdnbye/flutter-p2p-engine) - Flutter视频/直播APP省流量&加速神器, 由[mjl0602](https://github.com/mjl0602)贡献。
+- [flutter-p2p-engine](https://github.com/cdnbye/flutter-p2p-engine) - Flutter视频/直播APP省流量&加速神器, 由 [mjl0602](https://github.com/mjl0602) 贡献。
+- [hlsjs-p2p-engine](https://github.com/cdnbye/hlsjs-p2p-engine) - 目前最好的Web端P2P流媒体方案。
 
 ## FAQ
 我们收集了一些[常见问题](https://docs.cdnbye.com/#/FAQ)。在报告issue之前请先查看一下。
