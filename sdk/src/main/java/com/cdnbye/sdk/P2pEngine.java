@@ -39,7 +39,6 @@ public final class P2pEngine {
     private boolean isvalid = true;
     private HttpServer localServer;
     private boolean isServerRunning;               // 代理服务器是否正常运行
-    private int urlParseCount = 0;                 // 转化URL的次数
     private int currentPort;
     private TrackerClient tracker;
     private P2pStatisticsListener listener;
@@ -120,7 +119,6 @@ public final class P2pEngine {
         Logger.d("parseStreamUrl");
 
         long startTime = System.currentTimeMillis();
-        urlParseCount++;
 
         try {
             this.originalURL = new URL(url);
@@ -148,13 +146,6 @@ public final class P2pEngine {
                 Logger.e("Local server is not running");
                 return url;
             }
-
-            // 一定次数后重启代理服务器 test
-//            if (urlParseCount >= 5) {
-//                Logger.i("restart local server");
-//                startLocalServer();
-//                urlParseCount = 0;
-//            }
 
             String m3u8Name = originalURL.getPath();
             localUrlStr = String.format(Locale.ENGLISH, "%s:%d%s", LOCAL_IP, currentPort, m3u8Name);
@@ -197,6 +188,7 @@ public final class P2pEngine {
                 startLocalServer();
             } catch (Exception e) {
                 e.printStackTrace();
+//            return url;
             }
         }
     }
@@ -261,7 +253,6 @@ public final class P2pEngine {
         public HttpServer(int port) throws IOException {
             super(port);
             start();
-            Logger.w("MyServer", "\nRunning! Point your browsers to [http://0.0.0.0:33445/](http://localhost:33445/)\n");
         }
 
         @Override
@@ -329,11 +320,13 @@ public final class P2pEngine {
                                 return newFixedLengthResponse(Response.Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()), seg.getBuffer().length);
                             } else {
                                 Logger.w("request ts failed, redirect to " + rawTSUrl);
-                                throw new Exception("scheduler request ts failed");
+                                Response resp = newFixedLengthResponse(Response.Status.REDIRECT, seg.getContentType(), null);
+                                resp.addHeader("Location", rawTSUrl);
+                                return resp;
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
+                            Response resp = newFixedLengthResponse(Response.Status.REDIRECT, seg.getContentType(), null);
                             resp.addHeader("Location", rawTSUrl);
                             return resp;
                         }
@@ -358,23 +351,17 @@ public final class P2pEngine {
                     float bufferTime = CBTimer.getInstance().getBufferTime();
                     CBTimer.getInstance().updateBaseTime();
                     CBTimer.getInstance().updateAvailableSpanWithBufferTime(bufferTime);
-
-                    HttpLoader.loadSegmentSync(seg, headers);
-                    try {
-                        seg.wait();
-                        if (seg.getBuffer() != null && seg.getBuffer().length > 0) {
-                            Logger.i("engine onResponse: " + seg.getBuffer().length + " contentType: " + seg.getContentType() + " segId " + seg.getSegId());
+                    Segment segment = HttpLoader.loadSegmentSync(seg, headers);
+                    if (segment.getBuffer() != null && segment.getBuffer().length > 0) {
+                        Logger.i("engine onResponse: " + segment.getBuffer().length + " contentType: " + segment.getContentType() + " segId " + segment.getSegId());
 //                                Logger.i(segId + " sha1:" + UtilFunc.getStringSHA1(seg.getBuffer()));
-                            if (listener != null) {
-                                listener.onHttpDownloaded(seg.getBuffer().length / 1024);
-                            }
-                            return newFixedLengthResponse(Response.Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()), seg.getBuffer().length);
-                        } else {
-                            Logger.w("engine request ts failed, redirect to " + rawTSUrl);
-                            throw new Exception("scheduler request ts failed");
+                        if (listener != null) {
+                            listener.onHttpDownloaded(segment.getBuffer().length / 1024);
                         }
-                    } catch (Exception e) {
-                        Response resp = newFixedLengthResponse(Response.Status.REDIRECT, seg.getContentType(), null);
+                        return newFixedLengthResponse(Response.Status.OK, segment.getContentType(), new ByteArrayInputStream(segment.getBuffer()), segment.getBuffer().length);
+                    } else {
+                        Logger.w("engine request ts failed, redirect to " + rawTSUrl);
+                        Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
                         resp.addHeader("Location", rawTSUrl);
                         return resp;
                     }

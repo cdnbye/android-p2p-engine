@@ -108,8 +108,8 @@ public class P2pConfig {
     }
 
     public static class Builder {
-        private String announce = "https://api.cdnbye.com/v1";
-        private String wsSignalerAddr = "wss://signal.cdnbye.com/wss";
+        private String announce = "https://tracker.cdnbye.com/v1";
+        private String wsSignalerAddr = "wss://signal.cdnbye.com";
         private String mTag = "unknown";
         private String mAgent = "";
         private ChannelIdCallback channelId = null;
