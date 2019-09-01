@@ -114,7 +114,7 @@ public class P2pConfig {
         private String mAgent = "";
         private ChannelIdCallback channelId = null;
         private boolean p2pEnabled = true;
-        private int dcDownloadTimeout = 4_000;
+        private int dcDownloadTimeout = 15_000;
         private int downloadTimeout = 10_000;
         private int packetSize = 64*1024;
         private long maxBufferSize = 1024*1024*1024;

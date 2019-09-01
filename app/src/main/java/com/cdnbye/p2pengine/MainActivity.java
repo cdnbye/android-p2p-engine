@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
     private VideoView videoView;
     private StandardVideoController controller;
 
-    private final String VOD = "https://iqiyi.com-t-iqiyi.com/20190722/5120_0f9eec31/index.m3u8";
+    private final String VOD = "http://cn1.ruioushang.com/hls/20190824/6bbb04d6e14df9b331cf88409a8846c6/1566615719/index.m3u8";
     private final String LIVE = "http://aplay.gztv.com/sec/zhonghe.m3u8?txSecret=a777cb396c8c9c82251f4c8c389cf141&txTime=1560699724934";
 
     private Button replayBtn;
@@ -167,9 +167,9 @@ public class MainActivity extends Activity {
 //        videoView.setUrl(VOD); //设置视频地址
 
         // 使用IjkPlayer解码
-        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
+//        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
         // 使用ExoPlayer解码
-//        videoView.setPlayerFactory(ExoMediaPlayerFactory.create(this));
+        videoView.setPlayerFactory(ExoMediaPlayerFactory.create(this));
         // 使用MediaPlayer解码
 //        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
 

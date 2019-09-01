@@ -138,7 +138,7 @@ public final class P2pEngine {
                 return url;
             }
             if (!originalURL.getPath().endsWith(".m3u8")) {
-                Logger.e("Media type is not supported");
+                Logger.w("Media type is not supported");
                 return url;
             }
 
@@ -168,7 +168,7 @@ public final class P2pEngine {
     }
 
     public void stopP2p() {
-        Logger.w("engine stop p2p");
+        Logger.i("engine stop p2p");
         if (isConnected()) {
             tracker.stopP2p();
         }
@@ -318,15 +318,16 @@ public final class P2pEngine {
                                 Logger.i("scheduler onResponse: " + seg.getBuffer().length + " contentType: " + seg.getContentType() + " segId " + seg.getSegId());
 //                                Logger.i(segId + " sha1:" + UtilFunc.getStringSHA1(seg.getBuffer()));
                                 return newFixedLengthResponse(Response.Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()), seg.getBuffer().length);
+//                                return newChunkedResponse(Response.Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()));
                             } else {
                                 Logger.w("request ts failed, redirect to " + rawTSUrl);
-                                Response resp = newFixedLengthResponse(Response.Status.REDIRECT, seg.getContentType(), null);
+                                Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
                                 resp.addHeader("Location", rawTSUrl);
                                 return resp;
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Response resp = newFixedLengthResponse(Response.Status.REDIRECT, seg.getContentType(), null);
+                            Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
                             resp.addHeader("Location", rawTSUrl);
                             return resp;
                         }
@@ -359,6 +360,7 @@ public final class P2pEngine {
                             listener.onHttpDownloaded(segment.getBuffer().length / 1024);
                         }
                         return newFixedLengthResponse(Response.Status.OK, segment.getContentType(), new ByteArrayInputStream(segment.getBuffer()), segment.getBuffer().length);
+//                        return newChunkedResponse(Response.Status.OK, segment.getContentType(), new ByteArrayInputStream(segment.getBuffer()));
                     } else {
                         Logger.w("engine request ts failed, redirect to " + rawTSUrl);
                         Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
