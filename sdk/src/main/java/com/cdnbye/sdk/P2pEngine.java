@@ -118,8 +118,6 @@ public final class P2pEngine {
     public String parseStreamUrl(@NonNull String url) {
         Logger.d("parseStreamUrl");
 
-        long startTime = System.currentTimeMillis();
-
         try {
             this.originalURL = new URL(url);
 
@@ -155,10 +153,6 @@ public final class P2pEngine {
             localUrlStr = url;
         }
         Logger.d("localUrlStr: " + localUrlStr);
-
-        long endTime = System.currentTimeMillis();
-        long usedTime = endTime - startTime;
-        Logger.i("parseStreamUrl usedTime " + usedTime);
 
         return localUrlStr;
     }
@@ -261,26 +255,30 @@ public final class P2pEngine {
             String uri = session.getUri();
             Logger.d("session uri " + uri);
             if (uri.endsWith(".m3u8")) {
+                Logger.d("handle m3u8");
                 // m3u8处理器
                 String mimeType = "application/vnd.apple.mpegurl";
                 try {
                     if (session.getUri().equals(currPlaylist)) {
                         // 非第一次m3u8请求
                         Logger.d("非第一次m3u8请求");
+                        if (!parser.isLive()) {
+                            return newFixedLengthResponse(Response.Status.OK, mimeType, parser.getM3u8String());
+                        }
                     } else {
                         // 第一次m3u8请求
                         Logger.d("第一次m3u8请求");
                         parser = new Parser(originalURL.toString());
                         currPlaylist = session.getUri();
                     }
+                    long s2 =  System.currentTimeMillis();
                     String sPlaylist = parser.getMediaPlaylist();
-//                    Logger.d("playlist: " + sPlaylist);
+                    long e2 =  System.currentTimeMillis();
+                    Logger.i("总耗时 " + (e2-s2));
+//                    Logger.i("playlist: " + sPlaylist);
                     Logger.i("receive m3u8");
                     // 获取直播或者点播
                     TrackerClient.setIsLive(parser.isLive());
-                    if (!parser.isLive()) {
-                        TrackerClient.setEndSN(parser.getEndSN());
-                    }
                     return newFixedLengthResponse(Response.Status.OK, mimeType, sPlaylist);
 
                 } catch (Exception e) {
@@ -294,20 +292,38 @@ public final class P2pEngine {
                 // ts处理器
                 String lastPath = uri.substring(uri.lastIndexOf('/') + 1);
                 Logger.i("player request ts: %s", lastPath);
-                final String segId = lastPath.split("\\.")[0];
-                final String rawTSUrl = session.getParameters().get("url").get(0);
-                float duration = Float.parseFloat(session.getParameters().get("duration").get(0));
-                String tsUrl = UtilFunc.decodeURIComponent(rawTSUrl);
-                Logger.d("ts url: %s segId: %s tsUrl: %s", rawTSUrl, segId, tsUrl);
-                Segment seg = new Segment(segId, rawTSUrl, duration);
                 Map<String, String> headers = new HashMap<>();
                 if (session.getHeaders().get("range") != null) {
                     headers.put("Range", session.getHeaders().get("range"));
                     Logger.i("Range: " + headers.get("Range"));
                 }
+                Segment seg;
+                if (parser.isLive()) {
+                    final String segId = lastPath.split("\\.")[0];
+                    String parameterString = session.getQueryParameterString();
+                    final String rawTSUrl = parameterString.substring(parameterString.indexOf("url=") + 4);
+                    float duration = Float.parseFloat(session.getParameters().get("duration").get(0));
+                    Logger.d("ts url: %s segId: %s tsUrl: %s", rawTSUrl, segId, parameterString);
+                    seg = new Segment(segId, rawTSUrl, duration);
+                } else {
+                    seg = parser.getSegMap().get(lastPath);
+                }
+                if (seg == null) {
+                    // 如果segMap还没生成
+                    URL segUrl = null;
+                    try {
+                        segUrl = new URL(parser.getOriginalURL(), lastPath);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    Logger.w("get seg from segMap failed, redirect to " + segUrl);
+                    Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
+                    resp.addHeader("Location", segUrl.toString());
+                    return resp;
+                }
                 if (isConnected() && config.getP2pEnabled()) {
                     // scheduler loadSegment
-                    Logger.i("scheduler load " + segId);
+                    Logger.i("scheduler load " + seg.getSegId());
 
                     synchronized (seg) {
                         try {
@@ -318,17 +334,17 @@ public final class P2pEngine {
                                 Logger.i("scheduler onResponse: " + seg.getBuffer().length + " contentType: " + seg.getContentType() + " segId " + seg.getSegId());
 //                                Logger.i(segId + " sha1:" + UtilFunc.getStringSHA1(seg.getBuffer()));
                                 return newFixedLengthResponse(Response.Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()), seg.getBuffer().length);
-//                                return newChunkedResponse(Response.Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()));
                             } else {
-                                Logger.w("request ts failed, redirect to " + rawTSUrl);
+                                Logger.w("request ts failed, redirect to " + seg.getUrlString());
                                 Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
-                                resp.addHeader("Location", rawTSUrl);
+                                resp.addHeader("Location", seg.getUrlString());
                                 return resp;
                             }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                             Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
-                            resp.addHeader("Location", rawTSUrl);
+                            resp.addHeader("Location", seg.getUrlString());
                             return resp;
                         }
                     }
@@ -346,7 +362,7 @@ public final class P2pEngine {
                         }
                     }
                     // 如果tracker还没连上ws则直接请求ts
-                    Logger.d("engine loadSegment " + segId);
+                    Logger.d("engine loadSegment " + seg.getSegId());
 
                     // 更新CBTimmer
                     float bufferTime = CBTimer.getInstance().getBufferTime();
@@ -362,9 +378,9 @@ public final class P2pEngine {
                         return newFixedLengthResponse(Response.Status.OK, segment.getContentType(), new ByteArrayInputStream(segment.getBuffer()), segment.getBuffer().length);
 //                        return newChunkedResponse(Response.Status.OK, segment.getContentType(), new ByteArrayInputStream(segment.getBuffer()));
                     } else {
-                        Logger.w("engine request ts failed, redirect to " + rawTSUrl);
+                        Logger.w("engine request ts failed, redirect to " + seg.getUrlString());
                         Response resp = newFixedLengthResponse(Response.Status.REDIRECT, "", null);
-                        resp.addHeader("Location", rawTSUrl);
+                        resp.addHeader("Location", seg.getUrlString());
                         return resp;
                     }
                 }
@@ -382,7 +398,6 @@ public final class P2pEngine {
                     e.printStackTrace();
                 }
             }
-
             return newFixedLengthResponse(Response.Status.BAD_REQUEST, "", "");
         }
     }

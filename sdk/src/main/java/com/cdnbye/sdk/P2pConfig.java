@@ -34,10 +34,6 @@ public class P2pConfig {
         return downloadTimeout;
     }
 
-    public int getPacketSize() {
-        return packetSize;
-    }
-
     public long getMaxBufferSize() {
         return maxBufferSize;
     }
@@ -79,7 +75,6 @@ public class P2pConfig {
     private boolean p2pEnabled;
     private int dcDownloadTimeout;
     private int downloadTimeout;
-    private int packetSize;
     private long maxBufferSize;
     private LogLevel logLevel;
     private boolean  debug;
@@ -96,7 +91,6 @@ public class P2pConfig {
         this.p2pEnabled = builder.p2pEnabled;
         this.dcDownloadTimeout = builder.dcDownloadTimeout;
         this.downloadTimeout = builder.downloadTimeout;
-        this.packetSize = builder.packetSize;
         this.maxBufferSize = builder.maxBufferSize;
         this.localPort = builder.localPort;
         this.debug = builder.debug;
@@ -116,7 +110,6 @@ public class P2pConfig {
         private boolean p2pEnabled = true;
         private int dcDownloadTimeout = 15_000;
         private int downloadTimeout = 10_000;
-        private int packetSize = 64*1024;
         private long maxBufferSize = 1024*1024*1024;
         private int localPort = 52019;
         private LogLevel logLevel = LogLevel.WARN;              // ASSERT = 7; DEBUG = 3; ERROR = 6;INFO = 4;VERBOSE = 2;WARN = 5;
@@ -160,11 +153,6 @@ public class P2pConfig {
         public Builder downloadTimeout(int timeout, TimeUnit unit) {
             long millis = unit.toMillis(timeout);
             this.downloadTimeout = (int)millis;
-            return this;
-        }
-
-        public Builder packetSize(int packetSize) {
-            this.packetSize = packetSize;
             return this;
         }
 

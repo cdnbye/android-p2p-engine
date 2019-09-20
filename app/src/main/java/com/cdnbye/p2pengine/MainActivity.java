@@ -19,6 +19,7 @@ import com.cdnbye.sdk.P2pStatisticsListener;
 import com.cdnbye.sdk.LogLevel;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public class MainActivity extends Activity {
@@ -162,9 +163,7 @@ public class MainActivity extends Activity {
         videoView = findViewById(R.id.player);
 
         videoView.release();
-
         videoView.setUrl(parsedUrl); //设置视频地址
-//        videoView.setUrl(VOD); //设置视频地址
 
         // 使用IjkPlayer解码
 //        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
