@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release' // 添加bintray插件
 
-def SDK_VERSION = "0.7.0"          // 版本号
+def SDK_VERSION = "0.7.1"          // 版本号
 
 android {
     compileSdkVersion 29
@@ -54,7 +54,6 @@ dependencies {
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
-    implementation 'org.nanohttpd:nanohttpd:2.3.1'
     implementation 'com.jakewharton:disklrucache:2.0.2'
 }
 
