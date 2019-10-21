@@ -23,6 +23,8 @@ import com.cdnbye.core.utils.HttpHelper;
 import com.cdnbye.core.utils.UtilFunc;
 import com.orhanobut.logger.Logger;
 
+//import fi.iki.elonen.NanoHTTPD;
+
 import org.nanohttpd.protocols.http.*;
 import org.nanohttpd.protocols.http.response.*;
 
@@ -69,6 +71,9 @@ public final class P2pEngine {
         }
         if (token == null || token.length() == 0) {
             Logger.e("Token is required");
+            isvalid = false;
+        } else if (token.length() > 20) {
+            Logger.e("Token is too long");
             isvalid = false;
         }
         if (config.getCustomTag().length() > 20) {
@@ -300,10 +305,11 @@ public final class P2pEngine {
                     Logger.i("Range: " + headers.get("Range"));
                 }
                 Segment seg;
-                if (parser.isLive()) {
+                if (parser.isLive() || parser.isAbsolutePath()) {
                     final String segId = lastPath.split("\\.")[0];
                     String parameterString = session.getQueryParameterString();
-                    final String rawTSUrl = parameterString.substring(parameterString.indexOf("url=") + 4);
+                    String rawTSUrl = parameterString.substring(parameterString.indexOf("url=") + 4);
+                    rawTSUrl = UtilFunc.decodeURIComponent(rawTSUrl);
                     float duration = Float.parseFloat(session.getParameters().get("duration").get(0));
                     Logger.d("ts url: %s segId: %s tsUrl: %s", rawTSUrl, segId, parameterString);
                     seg = new Segment(segId, rawTSUrl, duration);

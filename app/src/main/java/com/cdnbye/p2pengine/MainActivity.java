@@ -34,8 +34,8 @@ public class MainActivity extends Activity {
     private Button switchBtn;
     private Button vodBtn;
     private Button liveBtn;
-//    private String currentUrl = VOD;
-    private String currentUrl = LIVE;
+    private String currentUrl = VOD;
+//    private String currentUrl = LIVE;
 
     private double totalHttpDownloaded = 0;
     private double totalP2pDownloaded = 0;
