@@ -3,7 +3,7 @@ package com.cdnbye.sdk;
 import java.util.concurrent.TimeUnit;
 import org.webrtc.PeerConnection.RTCConfiguration;
 
-public class P2pConfig {
+public final class P2pConfig {
 
     public String getAnnounce() {
         return announce;
@@ -66,6 +66,10 @@ public class P2pConfig {
         return memoryCacheLimit;
     }
 
+    public boolean isUseHttpRange() {
+        return useHttpRange;
+    }
+
     private String announce;
     private String wsSignalerAddr;
     private String mTag;
@@ -82,6 +86,7 @@ public class P2pConfig {
     private RTCConfiguration webRTCConfig;
     private int maxPeerConnections;
     private int memoryCacheLimit;
+    private boolean useHttpRange;
 
     private P2pConfig(Builder builder) {
         this.announce = builder.announce;
@@ -99,6 +104,7 @@ public class P2pConfig {
         this.webRTCConfig = builder.webRTCConfig;
         this.maxPeerConnections = builder.maxPeerConnections;
         this.memoryCacheLimit = builder.memoryCacheLimit;
+        this.useHttpRange = builder.useHttpRange;
     }
 
     public static class Builder {
@@ -108,7 +114,7 @@ public class P2pConfig {
         private String mAgent = "";
         private ChannelIdCallback channelId = null;
         private boolean p2pEnabled = true;
-        private int dcDownloadTimeout = 15_000;
+        private int dcDownloadTimeout = 6_000;
         private int downloadTimeout = 10_000;
         private long maxBufferSize = 1024*1024*1024;
         private int localPort = 52019;
@@ -117,6 +123,7 @@ public class P2pConfig {
         private RTCConfiguration webRTCConfig;                   // 需要判空
         private int maxPeerConnections = 10;
         private int memoryCacheLimit = 60 * 1024 *1024;
+        private boolean useHttpRange = true;
 
         public Builder announce(String announce) {
             this.announce = announce;
@@ -193,6 +200,11 @@ public class P2pConfig {
 
         public Builder memoryCacheLimit(int size) {
             this.memoryCacheLimit = size;
+            return this;
+        }
+
+        public Builder useHttpRange(boolean flag) {
+            this.useHttpRange = flag;
             return this;
         }
 

@@ -28,6 +28,11 @@ import com.orhanobut.logger.Logger;
 import org.nanohttpd.protocols.http.*;
 import org.nanohttpd.protocols.http.response.*;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
 public final class P2pEngine {
 
     public static final String Version = BuildConfig.VERSION_NAME;      // SDK版本号
@@ -238,15 +243,42 @@ public final class P2pEngine {
     }
 
 
-    private void initTrackerClient() throws Exception {
+    private void initTrackerClient(String tsUrl) throws Exception {
         if (tracker != null) return;
         Logger.i("Init tracker");
         // 拼接channelId，并进行url编码和base64编码
         String encodedChannelId = UtilFunc.getChannelId(originalURL.toString(), config.getWsSignalerAddr(), DataChannel.DC_VERSION, config.getChannelId());
 //        Logger.i("encodedChannelId: " + encodedChannelId);
-        TrackerClient trackerClient = new TrackerClient(token, encodedChannelId, config, listener);
+        final TrackerClient trackerClient = new TrackerClient(token, encodedChannelId, config, listener);
         this.tracker = trackerClient;
         trackerClient.doChannelReq();
+
+        if (!config.isUseHttpRange()) return;
+        // 发起Range测试请求
+        OkHttpClient okHttpClient = HttpHelper.getInstance().getOkHttpClient();
+        Request.Builder builder = new Request.Builder()
+                .url(tsUrl)
+                .method("GET",null);
+        builder = builder.header("RANGE", "bytes=0-10");
+        Request request = builder.build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                TrackerClient.setHttpRangeSupported(false);
+            }
+            @Override
+            public void onResponse(Call call, okhttp3.Response response){
+                if (response.code() == 206) {
+                    TrackerClient.setHttpRangeSupported(true);
+                    Logger.i("http range request is supported");
+                } else {
+                    TrackerClient.setHttpRangeSupported(false);
+                    Logger.i("http range request is not supported");
+                }
+
+            }
+        });
     }
 
     class HttpServer extends NanoHTTPD {
@@ -368,7 +400,8 @@ public final class P2pEngine {
                     if (tracker == null && config.getP2pEnabled() && prefetchSegs == PREFETCH_SEGMENTS && isvalid) {
                         synchronized (this) {
                             try {
-                                initTrackerClient();
+                                initTrackerClient(seg.getUrlString());
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 isvalid = false;
@@ -402,6 +435,7 @@ public final class P2pEngine {
                 // 其他文件处理器(key)
                 URL url = null;
                 try {
+//                    Logger.d("originalURL " + originalURL + " session.getUri(): " + session.getUri());
                     url = new URL(originalURL, session.getUri());
                     Logger.d("key url: " + url.toString());
 
