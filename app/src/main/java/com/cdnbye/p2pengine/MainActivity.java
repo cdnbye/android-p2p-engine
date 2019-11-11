@@ -1,16 +1,14 @@
 package com.cdnbye.p2pengine;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.TextView;
-
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.exo.ExoMediaPlayerFactory;
-import com.dueeeke.videoplayer.ijk.IjkPlayerFactory;
-import com.dueeeke.videoplayer.player.AndroidMediaPlayerFactory;
-import com.dueeeke.videoplayer.player.VideoView;
+import android.widget.VideoView;
+import java.util.List;
 
 import com.cdnbye.sdk.ChannelIdCallback;
 import com.cdnbye.sdk.P2pEngine;
@@ -18,16 +16,12 @@ import com.cdnbye.sdk.P2pConfig;
 import com.cdnbye.sdk.P2pStatisticsListener;
 import com.cdnbye.sdk.LogLevel;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 
 public class MainActivity extends Activity {
 
     private VideoView videoView;
-    private StandardVideoController controller;
 
-    private final String VOD = "http://cn1.ruioushang.com/hls/20190824/6bbb04d6e14df9b331cf88409a8846c6/1566615719/index.m3u8";
+    private final String VOD = "https://iqiyi.com-t-iqiyi.com/20190722/5120_0f9eec31/index.m3u8";
     private final String LIVE = "http://aplay.gztv.com/sec/zhonghe.m3u8?txSecret=a777cb396c8c9c82251f4c8c389cf141&txTime=1560699724934";
 
     private Button replayBtn;
@@ -55,23 +49,25 @@ public class MainActivity extends Activity {
                 .logEnabled(true)
                 .logLevel(LogLevel.DEBUG)
                 .build();
+
+        // Instantiate P2pEngine，which is a singleton
         P2pEngine engine = P2pEngine.initEngine(getApplicationContext(), "free", config);
         engine.addP2pStatisticsListener(new P2pStatisticsListener() {
             @Override
             public void onHttpDownloaded(long value) {
-                totalHttpDownloaded += (double)value;
+                totalHttpDownloaded += (double) value;
                 refreshRatio();
                 checkIfConnected();
             }
 
             @Override
             public void onP2pDownloaded(long value) {
-                totalP2pDownloaded += (double)value;
+                totalP2pDownloaded += (double) value;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         TextView offloadV = findViewById(R.id.offload);
-                        String text = String.format("Offload: %.2fMB", totalP2pDownloaded/1024);
+                        String text = String.format("Offload: %.2fMB", totalP2pDownloaded / 1024);
                         offloadV.setText(text);
 
                         refreshRatio();
@@ -82,12 +78,12 @@ public class MainActivity extends Activity {
 
             @Override
             public void onP2pUploaded(long value) {
-                totalP2pUploaded += (double)value;
+                totalP2pUploaded += (double) value;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         TextView uploadV = findViewById(R.id.upload);
-                        String text = String.format("Upload: %.2fMB", totalP2pUploaded/1024);
+                        String text = String.format("Upload: %.2fMB", totalP2pUploaded / 1024);
                         uploadV.setText(text);
                     }
                 });
@@ -159,25 +155,20 @@ public class MainActivity extends Activity {
     }
 
     private void startPlay(String url) {
+        // Convert original playback address (m3u8) to the address of the local proxy server
         String parsedUrl = P2pEngine.getInstance().parseStreamUrl(url);
+
         videoView = findViewById(R.id.player);
 
-        videoView.release();
-        videoView.setUrl(parsedUrl); //设置视频地址
+        videoView.setVideoURI(Uri.parse(parsedUrl));
 
-        // 使用IjkPlayer解码
-//        videoView.setPlayerFactory(IjkPlayerFactory.create(this));
-        // 使用ExoPlayer解码
-        videoView.setPlayerFactory(ExoMediaPlayerFactory.create(this));
-        // 使用MediaPlayer解码
-//        videoView.setPlayerFactory(AndroidMediaPlayerFactory.create(this));
+        MediaController controller = new MediaController(this);
 
-        if (controller == null) {
-            controller = new StandardVideoController(this);
-        }
+        videoView.setMediaController(controller);
+        controller.setMediaPlayer(videoView);
 
-        videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         videoView.start();
+
     }
 
     private void checkIfConnected() {
@@ -185,7 +176,7 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 TextView connectedV = findViewById(R.id.connected);
-                String text = String.format("Connected: %s", P2pEngine.getInstance().isConnected()?"Yes":"No");
+                String text = String.format("Connected: %s", P2pEngine.getInstance().isConnected() ? "Yes" : "No");
                 connectedV.setText(text);
 
                 TextView peerIdV = findViewById(R.id.peerId);
@@ -200,11 +191,11 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 double ratio = 0;
-                if (totalHttpDownloaded+totalP2pDownloaded != 0) {
-                    ratio = totalP2pDownloaded/(totalHttpDownloaded+totalP2pDownloaded);
+                if (totalHttpDownloaded + totalP2pDownloaded != 0) {
+                    ratio = totalP2pDownloaded / (totalHttpDownloaded + totalP2pDownloaded);
                 }
                 TextView ratioV = findViewById(R.id.ratio);
-                String text = String.format("P2P Ratio: %.0f%%", ratio*100);
+                String text = String.format("P2P Ratio: %.0f%%", ratio * 100);
                 ratioV.setText(text);
             }
         });
@@ -218,29 +209,4 @@ public class MainActivity extends Activity {
         refreshRatio();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        videoView.pause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        videoView.resume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        videoView.release();
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        if (!videoView.onBackPressed()) {
-            super.onBackPressed();
-        }
-    }
 }
