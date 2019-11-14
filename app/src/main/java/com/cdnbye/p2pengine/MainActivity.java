@@ -5,24 +5,30 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.VideoView;
 import java.util.List;
 
-import com.cdnbye.sdk.ChannelIdCallback;
 import com.cdnbye.sdk.P2pEngine;
 import com.cdnbye.sdk.P2pConfig;
 import com.cdnbye.sdk.P2pStatisticsListener;
 import com.cdnbye.sdk.LogLevel;
 
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
+import com.google.android.exoplayer2.ui.PlayerView;
 
 public class MainActivity extends Activity {
 
-    private VideoView videoView;
+    private final String VOD = "http://cn1.ruioushang.com/hls/20190824/6bbb04d6e14df9b331cf88409a8846c6/1566615719/index.m3u8";
+    private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
 
-    private final String VOD = "https://iqiyi.com-t-iqiyi.com/20190722/5120_0f9eec31/index.m3u8";
-    private final String LIVE = "http://aplay.gztv.com/sec/zhonghe.m3u8?txSecret=a777cb396c8c9c82251f4c8c389cf141&txTime=1560699724934";
+    private PlayerView playerView;
+    private SimpleExoPlayer player;
 
     private Button replayBtn;
     private Button switchBtn;
@@ -158,17 +164,26 @@ public class MainActivity extends Activity {
         // Convert original playback address (m3u8) to the address of the local proxy server
         String parsedUrl = P2pEngine.getInstance().parseStreamUrl(url);
 
-        videoView = findViewById(R.id.player);
-
-        videoView.setVideoURI(Uri.parse(parsedUrl));
-
-        MediaController controller = new MediaController(this);
-
-        videoView.setMediaController(controller);
-        controller.setMediaPlayer(videoView);
-
-        videoView.start();
-
+        // Create a data source factory.
+        DataSource.Factory dataSourceFactory =
+                new DefaultHttpDataSourceFactory(
+                        Util.getUserAgent(this, "p2p-engine"),
+                        DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+                        DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+                        true   /* allowCrossProtocolRedirects */
+                );
+        // Create a HLS media source pointing to a playlist uri.
+        HlsMediaSource hlsMediaSource =
+                new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(parsedUrl));
+        // Create a player instance.
+        player = ExoPlayerFactory.newSimpleInstance(this);
+        // Attach player to the view.
+        playerView = findViewById(R.id.player_view);
+        playerView.setPlayer(player);
+        // Prepare the player with the HLS media source.
+        player.prepare(hlsMediaSource);
+        // Start play when ready
+        player.setPlayWhenReady(true);
     }
 
     private void checkIfConnected() {
@@ -207,6 +222,12 @@ public class MainActivity extends Activity {
         totalP2pUploaded = 0;
         checkIfConnected();
         refreshRatio();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        player.release();
     }
 
 }
