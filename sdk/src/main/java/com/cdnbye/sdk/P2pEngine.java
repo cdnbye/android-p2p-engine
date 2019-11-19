@@ -323,7 +323,7 @@ public final class P2pEngine {
                 } catch (Exception e) {
                     e.printStackTrace();
                     Logger.w("m3u8 request redirect to " + originalURL.toString());
-                    Response resp = Response.newFixedLengthResponse(Status.REDIRECT, mimeType, "");
+                    Response resp = Response.newFixedLengthResponse(Status.FOUND, mimeType, "");
                     resp.addHeader("Location", parser.getOriginalURL().toString());
                     return resp;
                 }
@@ -362,7 +362,7 @@ public final class P2pEngine {
                             e.printStackTrace();
                         }
                         Logger.i("get seg from segMap failed, redirect to " + segUrl);
-                        Response resp = Response.newFixedLengthResponse(Status.REDIRECT, "", "");
+                        Response resp = Response.newFixedLengthResponse(Status.FOUND, "", "");
                         resp.addHeader("Location", segUrl.toString());
                         return resp;
                     }
@@ -382,14 +382,14 @@ public final class P2pEngine {
                                 return Response.newFixedLengthResponse(Status.OK, seg.getContentType(), new ByteArrayInputStream(seg.getBuffer()), seg.getBuffer().length);
                             } else {
                                 Logger.w("request ts failed, redirect to " + seg.getUrlString());
-                                Response resp = Response.newFixedLengthResponse(Status.REDIRECT, "", "");
+                                Response resp = Response.newFixedLengthResponse(Status.FOUND, "", "");
                                 resp.addHeader("Location", seg.getUrlString());
                                 return resp;
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Response resp = Response.newFixedLengthResponse(Status.REDIRECT, "", "");
+                            Response resp = Response.newFixedLengthResponse(Status.FOUND, "", "");
                             resp.addHeader("Location", seg.getUrlString());
                             return resp;
                         }
@@ -426,7 +426,7 @@ public final class P2pEngine {
 //                        return newChunkedResponse(Response.Status.OK, segment.getContentType(), new ByteArrayInputStream(segment.getBuffer()));
                     } else {
                         Logger.w("engine request ts failed, redirect to " + seg.getUrlString());
-                        Response resp = Response.newFixedLengthResponse(Status.REDIRECT, "", "");
+                        Response resp = Response.newFixedLengthResponse(Status.FOUND, "", "");
                         resp.addHeader("Location", seg.getUrlString());
                         return resp;
                     }
@@ -439,7 +439,7 @@ public final class P2pEngine {
                     url = new URL(originalURL, session.getUri());
                     Logger.d("key url: " + url.toString());
 
-                    Response resp = Response.newFixedLengthResponse(Status.REDIRECT, "", "");
+                    Response resp = Response.newFixedLengthResponse(Status.FOUND, "", "");
                     resp.addHeader("Location", url.toString());
                     return resp;
                 } catch (MalformedURLException e) {

@@ -45,7 +45,6 @@ dependencies {
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
-    implementation 'com.jakewharton:disklrucache:2.0.2'
     implementation 'com.google.android.exoplayer:exoplayer:2.10.7'
     implementation project(':sdk')
 }
