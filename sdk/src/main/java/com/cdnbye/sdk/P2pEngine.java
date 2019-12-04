@@ -96,6 +96,7 @@ public final class P2pEngine {
         init();
         Logger.d("P2pEngine created!");
 
+        TrackerClient.setContext(ctx);
         TrackerClient.setCacheDir(UtilFunc.getDiskCacheDir(ctx, "cdnbye"));
         TrackerClient.setBundleId(ctx.getPackageName());
         TrackerClient.setAppName(UtilFunc.getAppName(ctx));
