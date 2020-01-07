@@ -21,10 +21,14 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.tencent.bugly.crashreport.CrashReport;
 
 public class MainActivity extends Activity {
 
-    private final String VOD = "http://cn1.ruioushang.com/hls/20190824/6bbb04d6e14df9b331cf88409a8846c6/1566615719/index.m3u8";
+//    private final String VOD = "http://cn1.ruioushang.com/hls/20190824/6bbb04d6e14df9b331cf88409a8846c6/1566615719/index.m3u8";
+//    private final String VOD = "https://www.7639616.com/hls/20191010/c605703d2c460fa67dae31a48e8ffc7a/1570713033/index.m3u8";
+//    private final String VOD = "https://iqiyi.com-t-iqiyi.com/20190722/5120_0f9eec31/index.m3u8";
+    private final String VOD = "http://cn1.kankia.com/hls/20191220/596ff11e1db2c3969da01367fc41d3b0/1576776716/index.m3u8";
     private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
 
     private PlayerView playerView;
@@ -46,6 +50,9 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
+        // bugly
+        CrashReport.initCrashReport(getApplicationContext(), "e40b652a35", true);
+
         setContentView(R.layout.activity_main);
         TextView versionV = findViewById(R.id.version);
         versionV.setText("Version: " + P2pEngine.Version);
@@ -53,6 +60,8 @@ public class MainActivity extends Activity {
         P2pConfig config = new P2pConfig.Builder()
                 .p2pEnabled(true)
                 .logEnabled(true)
+                .memoryCacheCountLimit(15)
+                .maxPeerConnections(12)
                 .logLevel(LogLevel.DEBUG)
                 .build();
 
@@ -122,6 +131,9 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 // 清空数据
                 clearData();
+                if (player != null && player.isPlaying()) {
+                    player.stop();
+                }
                 startPlay(currentUrl);
             }
         });

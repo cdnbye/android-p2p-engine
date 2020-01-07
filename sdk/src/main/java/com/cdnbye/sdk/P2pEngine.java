@@ -23,10 +23,8 @@ import com.cdnbye.core.utils.HttpHelper;
 import com.cdnbye.core.utils.UtilFunc;
 import com.orhanobut.logger.Logger;
 
-//import fi.iki.elonen.NanoHTTPD;
-
-import org.nanohttpd.protocols.http.*;
-import org.nanohttpd.protocols.http.response.*;
+import org.httpd.protocols.http.*;
+import org.httpd.protocols.http.response.*;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,10 +51,10 @@ public final class P2pEngine {
     private P2pStatisticsListener listener;
     private String currPlaylist;
     private Parser parser;
+    private Context ctx;
 
     public boolean isConnected() {
         return tracker != null && tracker.isConnected();
-//        return false;
     }
 
     public String getPeerId() {
@@ -92,8 +90,9 @@ public final class P2pEngine {
 
         this.token = token;
         this.config = config;
+        this.ctx = ctx;
         currentPort = config.getLocalPort();
-        init();
+        init(ctx);
         Logger.d("P2pEngine created!");
 
         TrackerClient.setContext(ctx);
@@ -102,7 +101,6 @@ public final class P2pEngine {
         TrackerClient.setAppName(UtilFunc.getAppName(ctx));
 
         PCFactory.init(ctx);
-
     }
 
     public static P2pEngine initEngine(@NonNull Context ctx, @NonNull String token, @Nullable P2pConfig config) {
@@ -176,22 +174,22 @@ public final class P2pEngine {
 
     public void stopP2p() {
         Logger.i("engine stop p2p");
-        if (isConnected()) {
+        if (tracker != null) {
             tracker.stopP2p();
+            tracker = null;
         }
     }
 
     public void restartP2p() {
-        Logger.i("engine restart p2p");
         if (tracker != null) {
             stopP2p();
-            tracker = null;
         }
         prefetchSegs = 0;
         currPlaylist = "";
         if (!isServerRunning) {
             // 重启代理服务器
             try {
+                Logger.i("engine restart server");
                 startLocalServer();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -201,10 +199,10 @@ public final class P2pEngine {
     }
 
     // 初始化各个组件
-    private void init() {
+    private void init(Context ctx) {
         //初始化logger
-        LoggerUtil loggerUtil = new LoggerUtil(config.isDebug(), config.getLogLevel().value());
-        loggerUtil.init();
+        LoggerUtil loggerUtil = new LoggerUtil(config.isDebug(), config.getLogLevel().value(), config.isSetTopBox());
+        loggerUtil.init(ctx);
 
         // 初始化HttpHelper
         HttpHelper.init(config.getDownloadTimeout());
@@ -245,6 +243,9 @@ public final class P2pEngine {
 
 
     private void initTrackerClient(String tsUrl) throws Exception {
+
+//        PCFactory.init(ctx);
+
         if (tracker != null) return;
         Logger.i("Init tracker");
         // 拼接channelId，并进行url编码和base64编码
@@ -303,7 +304,16 @@ public final class P2pEngine {
                         // 非第一次m3u8请求
                         Logger.d("非第一次m3u8请求");
                         if (!parser.isLive()) {
-                            return Response.newFixedLengthResponse(Status.OK, mimeType, parser.getM3u8String());
+//                            Logger.d("parser.getM3u8String() " + parser.getM3u8String());
+                            String m3u8String = parser.getM3u8String();
+                            if (m3u8String != null) {
+                                return Response.newFixedLengthResponse(Status.OK, mimeType, m3u8String);
+                            } else {
+                                Logger.w("m3u8 request redirect to " + originalURL.toString());
+                                Response resp = Response.newFixedLengthResponse(Status.FOUND, mimeType, "");
+                                resp.addHeader("Location", parser.getOriginalURL().toString());
+                                return resp;
+                            }
                         }
                     } else {
                         // 第一次m3u8请求

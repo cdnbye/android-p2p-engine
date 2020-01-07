@@ -66,9 +66,15 @@ public final class P2pConfig {
         return memoryCacheLimit;
     }
 
+    public int getMemoryCacheCountLimit() {
+        return memoryCacheCountLimit;
+    }
+
     public boolean isUseHttpRange() {
         return useHttpRange;
     }
+
+    public boolean isSetTopBox() { return isSetTopBox; }
 
     private String announce;
     private String wsSignalerAddr;
@@ -86,7 +92,9 @@ public final class P2pConfig {
     private RTCConfiguration webRTCConfig;
     private int maxPeerConnections;
     private int memoryCacheLimit;
+    private int memoryCacheCountLimit;
     private boolean useHttpRange;
+    private boolean isSetTopBox;
 
     private P2pConfig(Builder builder) {
         this.announce = builder.announce;
@@ -104,7 +112,9 @@ public final class P2pConfig {
         this.webRTCConfig = builder.webRTCConfig;
         this.maxPeerConnections = builder.maxPeerConnections;
         this.memoryCacheLimit = builder.memoryCacheLimit;
+        this.memoryCacheCountLimit = builder.memoryCacheCountLimit;
         this.useHttpRange = builder.useHttpRange;
+        this.isSetTopBox = builder.isSetTopBox;
     }
 
     public static class Builder {
@@ -121,9 +131,11 @@ public final class P2pConfig {
         private LogLevel logLevel = LogLevel.WARN;              // ASSERT = 7; DEBUG = 3; ERROR = 6;INFO = 4;VERBOSE = 2;WARN = 5;
         private boolean debug = false;
         private RTCConfiguration webRTCConfig;                   // 需要判空
-        private int maxPeerConnections = 10;
-        private int memoryCacheLimit = 60 * 1024 *1024;
+        private int maxPeerConnections = 20;
+        private int memoryCacheLimit = 30 * 1024 *1024;
+        private int memoryCacheCountLimit = -1;
         private boolean useHttpRange = true;
+        private boolean isSetTopBox = false;
 
         public Builder announce(String announce) {
             this.announce = announce;
@@ -203,8 +215,18 @@ public final class P2pConfig {
             return this;
         }
 
+        public Builder memoryCacheCountLimit(int count) {
+            this.memoryCacheCountLimit = count;
+            return this;
+        }
+
         public Builder useHttpRange(boolean flag) {
             this.useHttpRange = flag;
+            return this;
+        }
+
+        public Builder isSetTopBox(boolean flag) {
+            this.isSetTopBox = flag;
             return this;
         }
 
