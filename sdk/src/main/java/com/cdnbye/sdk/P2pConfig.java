@@ -132,8 +132,8 @@ public final class P2pConfig {
         private boolean debug = false;
         private RTCConfiguration webRTCConfig;                   // 需要判空
         private int maxPeerConnections = 20;
-        private int memoryCacheLimit = 30 * 1024 *1024;
-        private int memoryCacheCountLimit = -1;
+        private int memoryCacheLimit = 0;
+        private int memoryCacheCountLimit = 30;
         private boolean useHttpRange = true;
         private boolean isSetTopBox = false;
 

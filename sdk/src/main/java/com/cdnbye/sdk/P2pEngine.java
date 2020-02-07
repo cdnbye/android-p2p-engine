@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.cdnbye.core.logger.LoggerUtil;
 import com.cdnbye.core.m3u8.Parser;
@@ -22,6 +24,10 @@ import com.cdnbye.core.utils.CBTimer;
 import com.cdnbye.core.utils.HttpHelper;
 import com.cdnbye.core.utils.UtilFunc;
 import com.orhanobut.logger.Logger;
+import com.cdnbye.core.utils.NetUtils;
+import com.cdnbye.core.nat.StunClient;
+import com.cdnbye.core.nat.StunResult;
+import com.cdnbye.core.nat.NatType;
 
 import org.httpd.protocols.http.*;
 import org.httpd.protocols.http.response.*;
@@ -38,8 +44,8 @@ public final class P2pEngine {
     private final String LOCAL_IP = "http://127.0.0.1";
     private final int PREFETCH_SEGMENTS = 5;            // 通过http预加载的ts数量，之后再初始化tracker
 
-    private P2pConfig config;
-    private String token;
+    private final P2pConfig config;
+    private final String token;
     private URL originalURL;
     private String localUrlStr;
     private int prefetchSegs = 0;
@@ -51,7 +57,7 @@ public final class P2pEngine {
     private P2pStatisticsListener listener;
     private String currPlaylist;
     private Parser parser;
-    private Context ctx;
+    private NatType natType = NatType.Unknown;
 
     public boolean isConnected() {
         return tracker != null && tracker.isConnected();
@@ -90,7 +96,6 @@ public final class P2pEngine {
 
         this.token = token;
         this.config = config;
-        this.ctx = ctx;
         currentPort = config.getLocalPort();
         init(ctx);
         Logger.d("P2pEngine created!");
@@ -199,7 +204,7 @@ public final class P2pEngine {
     }
 
     // 初始化各个组件
-    private void init(Context ctx) {
+    private void init(final Context ctx) {
         //初始化logger
         LoggerUtil loggerUtil = new LoggerUtil(config.isDebug(), config.getLogLevel().value(), config.isSetTopBox());
         loggerUtil.init(ctx);
@@ -214,6 +219,22 @@ public final class P2pEngine {
             e.printStackTrace();
 //            return url;
         }
+
+        // NAT探测  每10分钟探测一次
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                String localIP = NetUtils.getIPAddress(ctx);
+                Logger.i("local ip: " + localIP);
+                try {
+                    StunResult result = StunClient.query(localIP);
+                    Logger.i("Nat type: " + result.getNatType() + " Public IP: " + result.getIpAddr());
+                    natType = result.getNatType();
+                } catch (Exception e) {
+//                    e.printStackTrace();
+                    natType = NatType.Unknown;
+                }
+            }
+        },  1000, 10*60*1000);
     }
 
     private void startLocalServer() {
@@ -251,7 +272,7 @@ public final class P2pEngine {
         // 拼接channelId，并进行url编码和base64编码
         String encodedChannelId = UtilFunc.getChannelId(originalURL.toString(), config.getWsSignalerAddr(), DataChannel.DC_VERSION, config.getChannelId());
 //        Logger.i("encodedChannelId: " + encodedChannelId);
-        final TrackerClient trackerClient = new TrackerClient(token, encodedChannelId, config, listener);
+        final TrackerClient trackerClient = new TrackerClient(token, encodedChannelId, config, listener, natType.toString());
         this.tracker = trackerClient;
         trackerClient.doChannelReq();
 
@@ -408,7 +429,7 @@ public final class P2pEngine {
 
                 } else {
                     prefetchSegs++;
-                    if (tracker == null && config.getP2pEnabled() && prefetchSegs == PREFETCH_SEGMENTS && isvalid) {
+                    if (tracker == null && config.getP2pEnabled() && prefetchSegs >= PREFETCH_SEGMENTS && isvalid) {
                         synchronized (this) {
                             try {
                                 initTrackerClient(seg.getUrlString());
