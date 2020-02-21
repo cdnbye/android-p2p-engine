@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release' // 添加bintray插件
+//apply plugin: 'com.novoda.bintray-release' // 添加bintray插件 // 发布打开
 
 def SDK_VERSION = "1.2.4"          // 版本号
 
@@ -56,16 +56,16 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 }
 
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-publish {
-    userOrg = properties.getProperty("bintray.user")
-    repoName = 'maven'
-    groupId = 'com.cdnbye'
-    artifactId = 'sdk'
-    publishVersion = SDK_VERSION
-    desc = 'Live/VOD P2P Engine for Android and Android TV'
-    website = 'https://github.com/cdnbye/android-p2p-engine'
-}
+// 发布打开
+//Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//
+//publish {
+//    userOrg = properties.getProperty("bintray.user")
+//    repoName = 'maven'
+//    groupId = 'com.cdnbye'
+//    artifactId = 'sdk'
+//    publishVersion = SDK_VERSION
+//    desc = 'Live/VOD P2P Engine for Android and Android TV'
+//    website = 'https://github.com/cdnbye/android-p2p-engine'
+//}
