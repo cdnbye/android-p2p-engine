@@ -44,7 +44,11 @@ public final class P2pEngine {
     private final String LOCAL_IP = "http://127.0.0.1";
     private final int PREFETCH_SEGMENTS = 5;            // 通过http预加载的ts数量，之后再初始化tracker
 
-    private final P2pConfig config;
+    public void setConfig(P2pConfig config) {
+        this.config = config;
+    }
+
+    private P2pConfig config;
     private final String token;
     private URL originalURL;
     private String localUrlStr;
@@ -270,6 +274,7 @@ public final class P2pEngine {
         if (tracker != null) return;
         Logger.i("Init tracker");
         // 拼接channelId，并进行url编码和base64编码
+//        Logger.i("getWsSignalerAddr " + config.getWsSignalerAddr());
         String encodedChannelId = UtilFunc.getChannelId(originalURL.toString(), config.getWsSignalerAddr(), DataChannel.DC_VERSION, config.getChannelId());
 //        Logger.i("encodedChannelId: " + encodedChannelId);
         final TrackerClient trackerClient = new TrackerClient(token, encodedChannelId, config, listener, natType.toString());
@@ -367,6 +372,11 @@ public final class P2pEngine {
                 if (session.getHeaders().get("range") != null) {
                     headers.put("Range", session.getHeaders().get("range"));
                     Logger.i("Range: " + headers.get("Range"));
+                }
+                // User-Agent
+                if (config.getUserAgent() != null) {
+                    headers.put("User-Agent", config.getUserAgent());
+                    Logger.i("User-Agent: " + headers.get("User-Agent"));
                 }
                 Segment seg;
                 if (parser.isLive() || parser.isAbsolutePath()) {

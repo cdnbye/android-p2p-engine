@@ -76,6 +76,8 @@ public final class P2pConfig {
 
     public boolean isSetTopBox() { return isSetTopBox; }
 
+    public String getUserAgent() { return userAgent; }
+
     private String announce;
     private String wsSignalerAddr;
     private String mTag;
@@ -95,6 +97,7 @@ public final class P2pConfig {
     private int memoryCacheCountLimit;
     private boolean useHttpRange;
     private boolean isSetTopBox;
+    private String userAgent;
 
     private P2pConfig(Builder builder) {
         this.announce = builder.announce;
@@ -115,6 +118,7 @@ public final class P2pConfig {
         this.memoryCacheCountLimit = builder.memoryCacheCountLimit;
         this.useHttpRange = builder.useHttpRange;
         this.isSetTopBox = builder.isSetTopBox;
+        this.userAgent = builder.userAgent;
     }
 
     public static class Builder {
@@ -136,6 +140,7 @@ public final class P2pConfig {
         private int memoryCacheCountLimit = 30;
         private boolean useHttpRange = true;
         private boolean isSetTopBox = false;
+        private String userAgent = null;
 
         public Builder announce(String announce) {
             this.announce = announce;
@@ -227,6 +232,11 @@ public final class P2pConfig {
 
         public Builder isSetTopBox(boolean flag) {
             this.isSetTopBox = flag;
+            return this;
+        }
+
+        public Builder setUserAgent(String userAgent) {
+            this.userAgent = userAgent;
             return this;
         }
 
