@@ -48,6 +48,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.10.7'
     compile 'com.tencent.bugly:crashreport:latest.release'
-//    implementation 'com.cdnbye:sdk:latest.release'
+    //    implementation 'com.cdnbye:sdk:latest.release'
     implementation project(':sdk')
 }

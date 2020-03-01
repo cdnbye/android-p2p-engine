@@ -34,6 +34,9 @@ See [API.md](https://docs.cdnbye.com/#/android/API)
 - If you found a bug, open an issue.
 - If you have a feature request, open an issue.
 
+## They are using CDNBye
+[<img src="https://cdnbye.oss-cn-beijing.aliyuncs.com/pic/dxxw.png" width="120">](https://sj.qq.com/myapp/detail.htm?apkName=com.hnr.dxxw)
+
 ## Related Projects
 - [ios-p2p-engine](https://github.com/cdnbye/ios-p2p-engine) -  iOS Video P2P Engine for Any Player.
 - [flutter-p2p-engine](https://github.com/cdnbye/flutter-p2p-engine) - Live/VOD P2P Engine for Flutter, contributed by [mjl0602](https://github.com/mjl0602).
