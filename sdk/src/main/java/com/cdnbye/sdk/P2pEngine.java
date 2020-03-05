@@ -267,7 +267,7 @@ public final class P2pEngine {
     }
 
 
-    private void initTrackerClient(String tsUrl) throws Exception {
+    private void initTrackerClient(String tsUrl) {
 
 //        PCFactory.init(ctx);
 
@@ -288,6 +288,10 @@ public final class P2pEngine {
                 .url(tsUrl)
                 .method("GET",null);
         builder = builder.header("RANGE", "bytes=0-10");
+        // User-Agent
+        if (config.getUserAgent() != null) {
+            builder = builder.header("User-Agent", config.getUserAgent());
+        }
         Request request = builder.build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -350,7 +354,7 @@ public final class P2pEngine {
                     long s2 =  System.currentTimeMillis();
                     String sPlaylist = parser.getMediaPlaylist();
                     long e2 =  System.currentTimeMillis();
-                    Logger.i("总耗时 " + (e2-s2));
+                    Logger.d("总耗时 " + (e2-s2));
 //                    Logger.i("playlist: " + sPlaylist);
                     Logger.i("receive m3u8");
                     // 获取直播或者点播

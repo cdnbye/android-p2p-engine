@@ -28,8 +28,7 @@ public class MainActivity extends Activity {
 //    private final String VOD = "http://cn1.ruioushang.com/hls/20190824/6bbb04d6e14df9b331cf88409a8846c6/1566615719/index.m3u8";
 //    private final String VOD = "https://www.7639616.com/hls/20191010/c605703d2c460fa67dae31a48e8ffc7a/1570713033/index.m3u8";
 //    private final String VOD = "https://iqiyi.com-t-iqiyi.com/20190722/5120_0f9eec31/index.m3u8";
-//    private final String VOD = "http://cn1.kankia.com/hls/20191220/596ff11e1db2c3969da01367fc41d3b0/1576776716/index.m3u8";
-    private final String VOD = "http://v.live.hndt.com/video/20200218/deccc038a06f437a83431985575773f8/cloudv-transfer/55555555q09sq2975556526532nn6520_2ed7b274c84443bf975af287ddc6be4a_0_4.m3u8";
+    private final String VOD = "http://cn1.kankia.com/hls/20191220/596ff11e1db2c3969da01367fc41d3b0/1576776716/index.m3u8";
     private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
 
     private PlayerView playerView;
