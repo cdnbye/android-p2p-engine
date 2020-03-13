@@ -11,4 +11,6 @@ public interface P2pStatisticsListener {
     void onP2pUploaded(long value);
 
     void onPeers(List<String> peers);
+
+    void onServerConnected(boolean connected);
 }

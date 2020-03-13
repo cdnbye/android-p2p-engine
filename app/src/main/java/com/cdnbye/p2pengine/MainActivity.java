@@ -72,7 +72,6 @@ public class MainActivity extends Activity {
             public void onHttpDownloaded(long value) {
                 totalHttpDownloaded += (double) value;
                 refreshRatio();
-                checkIfConnected();
             }
 
             @Override
@@ -88,7 +87,6 @@ public class MainActivity extends Activity {
                         refreshRatio();
                     }
                 });
-                checkIfConnected();
             }
 
             @Override
@@ -102,7 +100,6 @@ public class MainActivity extends Activity {
                         uploadV.setText(text);
                     }
                 });
-                checkIfConnected();
             }
 
             @Override
@@ -115,7 +112,21 @@ public class MainActivity extends Activity {
                         peersV.setText(text);
                     }
                 });
-                checkIfConnected();
+            }
+
+            @Override
+            public void onServerConnected(boolean connected) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView connectedV = findViewById(R.id.connected);
+                        String text = String.format("Connected: %s", connected?"Yes":"No");
+                        connectedV.setText(text);
+                        TextView peerIdV = findViewById(R.id.peerId);
+                        String text2 = String.format("Peer ID: %s", P2pEngine.getInstance().getPeerId());
+                        peerIdV.setText(text2);
+                    }
+                });
             }
         });
 
@@ -198,21 +209,6 @@ public class MainActivity extends Activity {
         player.setPlayWhenReady(true);
     }
 
-    private void checkIfConnected() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView connectedV = findViewById(R.id.connected);
-                String text = String.format("Connected: %s", P2pEngine.getInstance().isConnected() ? "Yes" : "No");
-                connectedV.setText(text);
-
-                TextView peerIdV = findViewById(R.id.peerId);
-                String text2 = String.format("Peer ID: %s", P2pEngine.getInstance().getPeerId());
-                peerIdV.setText(text2);
-            }
-        });
-    }
-
     private void refreshRatio() {
         runOnUiThread(new Runnable() {
             @Override
@@ -232,7 +228,6 @@ public class MainActivity extends Activity {
         totalHttpDownloaded = 0;
         totalP2pDownloaded = 0;
         totalP2pUploaded = 0;
-        checkIfConnected();
         refreshRatio();
     }
 
