@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 //apply plugin: 'com.novoda.bintray-release' // 添加bintray插件 // 发布打开
 
-def SDK_VERSION = "1.4.2"          // 版本号
+def SDK_VERSION = "1.5.0"          // 版本号
 
 android {
     compileSdkVersion 29

@@ -78,6 +78,11 @@ public final class P2pConfig {
 
     public String getUserAgent() { return userAgent; }
 
+    public boolean isWifiOnly() {
+        return wifiOnly;
+    }
+
+
     private String announce;
     private String wsSignalerAddr;
     private String mTag;
@@ -98,6 +103,7 @@ public final class P2pConfig {
     private boolean useHttpRange;
     private boolean isSetTopBox;
     private String userAgent;
+    private boolean wifiOnly;
 
     private P2pConfig(Builder builder) {
         this.announce = builder.announce;
@@ -119,6 +125,7 @@ public final class P2pConfig {
         this.useHttpRange = builder.useHttpRange;
         this.isSetTopBox = builder.isSetTopBox;
         this.userAgent = builder.userAgent;
+        this.wifiOnly = builder.wifiOnly;
     }
 
     public static class Builder {
@@ -141,6 +148,7 @@ public final class P2pConfig {
         private boolean useHttpRange = true;
         private boolean isSetTopBox = false;
         private String userAgent = null;
+        private boolean wifiOnly = false;
 
         public Builder announce(String announce) {
             this.announce = announce;
@@ -237,6 +245,11 @@ public final class P2pConfig {
 
         public Builder setUserAgent(String userAgent) {
             this.userAgent = userAgent;
+            return this;
+        }
+
+        public Builder wifiOnly(boolean flag) {
+            this.wifiOnly = flag;
             return this;
         }
 
