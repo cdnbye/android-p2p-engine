@@ -25,10 +25,10 @@ CDNBye Android P2P Engine scales live/vod video streaming by peer-to-peer networ
 Android Version Support: Kitkat 4.4(API level >= 19)
 
 ## Integration
-See [document](https://www.cdnbye.com/en/views/android/usage.html)
+See [document](https://p2p.cdnbye.com/en/views/android/usage.html)
 
 ## API and Configuration
-See [API.md](https://www.cdnbye.com/en/views/android/API.html)
+See [API.md](https://p2p.cdnbye.com/en/views/android/API.html)
 
 ## Issue & Feature Request
 - If you found a bug, open an issue.
@@ -43,7 +43,7 @@ See [API.md](https://www.cdnbye.com/en/views/android/API.html)
 - [hlsjs-p2p-engine](https://github.com/cdnbye/hlsjs-p2p-engine) - Web Video Delivery Technology with No Plugins.
 
 ## FAQ
-We have collected some [frequently asked questions](https://www.cdnbye.com/en/views/FAQ.html). Before reporting an issue, please search if the FAQ has the answer to your problem.
+We have collected some [frequently asked questions](https://p2p.cdnbye.com/en/views/FAQ.html). Before reporting an issue, please search if the FAQ has the answer to your problem.
 
 ## Contact Us
 Email：service@cdnbye.com
