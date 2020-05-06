@@ -55,15 +55,8 @@ public class MainActivity extends Activity {
         versionV.setText("Version: " + P2pEngine.Version);
 
         P2pConfig config = new P2pConfig.Builder()
-                .p2pEnabled(true)
                 .logEnabled(true)
-                .memoryCacheCountLimit(15)
-                .maxPeerConnections(12)
-                .logLevel(LogLevel.DEBUG)
-
-                .announce("https://tracker.p2pengine.net:7067/v1")
-                .wsSignalerAddr("wss://signal.p2pengine.net:8089")
-
+                .logLevel(LogLevel.INFO)
                 .build();
 
         // Instantiate P2pEngine，which is a singleton
