@@ -21,7 +21,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.tencent.bugly.crashreport.CrashReport;
+//import com.tencent.bugly.crashreport.CrashReport;
 
 public class MainActivity extends Activity {
 
@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         // bugly
-        CrashReport.initCrashReport(getApplicationContext(), "e40b652a35", true);
+//        CrashReport.initCrashReport(getApplicationContext(), "e40b652a35", true);
 
         setContentView(R.layout.activity_main);
         TextView versionV = findViewById(R.id.version);
@@ -60,6 +60,10 @@ public class MainActivity extends Activity {
                 .memoryCacheCountLimit(15)
                 .maxPeerConnections(12)
                 .logLevel(LogLevel.DEBUG)
+
+                .announce("https://tracker.p2pengine.net:7067/v1")
+                .wsSignalerAddr("wss://signal.p2pengine.net:8089")
+
                 .build();
 
         // Instantiate P2pEngine，which is a singleton

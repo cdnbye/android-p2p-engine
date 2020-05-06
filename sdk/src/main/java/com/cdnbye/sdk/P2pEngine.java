@@ -93,10 +93,6 @@ public final class P2pEngine {
             Logger.e("Tag is too long");
             isvalid = false;
         }
-        if (config.getAgent().length() > 20) {
-            Logger.e("Agent is too long");
-            isvalid = false;
-        }
 
         this.token = token;
         this.config = config;
@@ -348,7 +344,7 @@ public final class P2pEngine {
                     } else {
                         // 第一次m3u8请求
                         Logger.d("第一次m3u8请求");
-                        parser = new Parser(originalURL.toString());
+                        parser = new Parser(originalURL.toString(), config.getUserAgent());
                         currPlaylist = session.getUri();
                     }
                     long s2 =  System.currentTimeMillis();
@@ -380,7 +376,7 @@ public final class P2pEngine {
                 // User-Agent
                 if (config.getUserAgent() != null) {
                     headers.put("User-Agent", config.getUserAgent());
-                    Logger.i("User-Agent: " + headers.get("User-Agent"));
+//                    Logger.i("User-Agent: " + headers.get("User-Agent"));
                 }
                 Segment seg;
                 if (parser.isLive() || parser.isAbsolutePath()) {
@@ -410,6 +406,7 @@ public final class P2pEngine {
                         Logger.i("get seg from segMap failed, redirect to " + segUrl);
                         Response resp = Response.newFixedLengthResponse(Status.FOUND, "", "");
                         resp.addHeader("Location", segUrl.toString());
+//                        resp.addHeader("User-Agent", headers.get("User-Agent"));
                         return resp;
                     }
                 }
@@ -473,7 +470,7 @@ public final class P2pEngine {
                     } else {
                         Logger.w("engine request ts failed, redirect to " + seg.getUrlString());
                         Response resp = Response.newFixedLengthResponse(Status.FOUND, "", "");
-                        resp.addHeader("Location", seg.getUrlString());
+                        resp.addHeader("Location", seg.getUrlString()); // TODO user-agent
                         return resp;
                     }
                 }

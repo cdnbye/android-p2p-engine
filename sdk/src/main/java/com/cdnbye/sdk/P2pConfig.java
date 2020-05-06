@@ -17,10 +17,6 @@ public final class P2pConfig {
         return mTag;
     }
 
-    public String getAgent() {
-        return mAgent;
-    }
-
     public Boolean getP2pEnabled() {
         return p2pEnabled;
     }
@@ -62,21 +58,17 @@ public final class P2pConfig {
         return maxPeerConnections;
     }
 
-    public int getMemoryCacheLimit() {
-        return memoryCacheLimit;
-    }
-
     public int getMemoryCacheCountLimit() {
         return memoryCacheCountLimit;
     }
+
+    public String getUserAgent() { return userAgent; }
 
     public boolean isUseHttpRange() {
         return useHttpRange;
     }
 
     public boolean isSetTopBox() { return isSetTopBox; }
-
-    public String getUserAgent() { return userAgent; }
 
     public boolean isWifiOnly() {
         return wifiOnly;
@@ -86,7 +78,6 @@ public final class P2pConfig {
     private String announce;
     private String wsSignalerAddr;
     private String mTag;
-    private String mAgent;
 
     private ChannelIdCallback channelId;
     private boolean p2pEnabled;
@@ -98,7 +89,6 @@ public final class P2pConfig {
     private int localPort;
     private RTCConfiguration webRTCConfig;
     private int maxPeerConnections;
-    private int memoryCacheLimit;
     private int memoryCacheCountLimit;
     private boolean useHttpRange;
     private boolean isSetTopBox;
@@ -109,7 +99,6 @@ public final class P2pConfig {
         this.announce = builder.announce;
         this.wsSignalerAddr = builder.wsSignalerAddr;
         this.mTag = builder.mTag;
-        this.mAgent = builder.mAgent;
         this.p2pEnabled = builder.p2pEnabled;
         this.dcDownloadTimeout = builder.dcDownloadTimeout;
         this.downloadTimeout = builder.downloadTimeout;
@@ -120,7 +109,6 @@ public final class P2pConfig {
         this.channelId = builder.channelId;
         this.webRTCConfig = builder.webRTCConfig;
         this.maxPeerConnections = builder.maxPeerConnections;
-        this.memoryCacheLimit = builder.memoryCacheLimit;
         this.memoryCacheCountLimit = builder.memoryCacheCountLimit;
         this.useHttpRange = builder.useHttpRange;
         this.isSetTopBox = builder.isSetTopBox;
@@ -132,7 +120,6 @@ public final class P2pConfig {
         private String announce = "https://tracker.cdnbye.com/v1";
         private String wsSignalerAddr = "wss://signal.cdnbye.com";
         private String mTag = "unknown";
-        private String mAgent = "";
         private ChannelIdCallback channelId = null;
         private boolean p2pEnabled = true;
         private int dcDownloadTimeout = 6_000;
@@ -143,7 +130,6 @@ public final class P2pConfig {
         private boolean debug = false;
         private RTCConfiguration webRTCConfig;                   // 需要判空
         private int maxPeerConnections = 20;
-        private int memoryCacheLimit = 0;
         private int memoryCacheCountLimit = 30;
         private boolean useHttpRange = true;
         private boolean isSetTopBox = false;
@@ -162,11 +148,6 @@ public final class P2pConfig {
 
         public Builder withTag(String tag) {
             this.mTag = tag;
-            return this;
-        }
-
-        public Builder withAgent(String agent) {
-            this.mAgent = agent;
             return this;
         }
 
@@ -220,11 +201,6 @@ public final class P2pConfig {
 
         public Builder maxPeerConnections(int conns) {
             this.maxPeerConnections = conns;
-            return this;
-        }
-
-        public Builder memoryCacheLimit(int size) {
-            this.memoryCacheLimit = size;
             return this;
         }
 
