@@ -27,7 +27,6 @@ import com.google.android.exoplayer2.ui.PlayerView;
 public class MainActivity extends Activity {
 
     private final String VOD = "https://www.nmgxwhz.com:65/20200107/17hTnjxI/index.m3u8";
-//    private final String VOD = "http://live.safenewtv2.eu:23000/live/muham-sana/5498cu3mvj/261.m3u8";
     private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
 
     private PlayerView playerView;
@@ -60,11 +59,6 @@ public class MainActivity extends Activity {
                 .logEnabled(true)
                 .logLevel(LogLevel.INFO)
                 .p2pEnabled(true)
-
-                // 测试环境
-                .announce("https://tracker.p2pengine.net:7067/v1")
-                .wsSignalerAddr("wss://signal.p2pengine.net:8089")
-
                 .playStats(new PlayerStatsCallback() {
                     @Override
                     public long onBufferedDuration() {
