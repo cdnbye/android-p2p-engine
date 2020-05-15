@@ -12,6 +12,7 @@ import com.cdnbye.sdk.P2pEngine;
 import com.cdnbye.sdk.P2pConfig;
 import com.cdnbye.sdk.P2pStatisticsListener;
 import com.cdnbye.sdk.LogLevel;
+import com.cdnbye.sdk.PlayerStatsCallback;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -26,6 +27,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 public class MainActivity extends Activity {
 
     private final String VOD = "https://www.nmgxwhz.com:65/20200107/17hTnjxI/index.m3u8";
+//    private final String VOD = "http://live.safenewtv2.eu:23000/live/muham-sana/5498cu3mvj/261.m3u8";
     private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
 
     private PlayerView playerView;
@@ -57,6 +59,18 @@ public class MainActivity extends Activity {
         P2pConfig config = new P2pConfig.Builder()
                 .logEnabled(true)
                 .logLevel(LogLevel.INFO)
+                .p2pEnabled(true)
+
+                // 测试环境
+                .announce("https://tracker.p2pengine.net:7067/v1")
+                .wsSignalerAddr("wss://signal.p2pengine.net:8089")
+
+                .playStats(new PlayerStatsCallback() {
+                    @Override
+                    public long onBufferedDuration() {
+                        return player.getBufferedPosition() - player.getCurrentPosition();
+                    }
+                })
                 .build();
 
         // Instantiate P2pEngine，which is a singleton
@@ -66,61 +80,42 @@ public class MainActivity extends Activity {
             public void onHttpDownloaded(long value) {
                 totalHttpDownloaded += (double) value;
                 refreshRatio();
+
             }
 
             @Override
             public void onP2pDownloaded(long value) {
                 totalP2pDownloaded += (double) value;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TextView offloadV = findViewById(R.id.offload);
-                        String text = String.format("Offload: %.2fMB", totalP2pDownloaded / 1024);
-                        offloadV.setText(text);
+                TextView offloadV = findViewById(R.id.offload);
+                String text = String.format("Offload: %.2fMB", totalP2pDownloaded / 1024);
+                offloadV.setText(text);
 
-                        refreshRatio();
-                    }
-                });
+                refreshRatio();
             }
 
             @Override
             public void onP2pUploaded(long value) {
                 totalP2pUploaded += (double) value;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TextView uploadV = findViewById(R.id.upload);
-                        String text = String.format("Upload: %.2fMB", totalP2pUploaded / 1024);
-                        uploadV.setText(text);
-                    }
-                });
+                TextView uploadV = findViewById(R.id.upload);
+                String text = String.format("Upload: %.2fMB", totalP2pUploaded / 1024);
+                uploadV.setText(text);
             }
 
             @Override
             public void onPeers(List<String> peers) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TextView peersV = findViewById(R.id.peers);
-                        String text = String.format("Peers: %d", peers.size());
-                        peersV.setText(text);
-                    }
-                });
+                TextView peersV = findViewById(R.id.peers);
+                String text = String.format("Peers: %d", peers.size());
+                peersV.setText(text);
             }
 
             @Override
             public void onServerConnected(boolean connected) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TextView connectedV = findViewById(R.id.connected);
-                        String text = String.format("Connected: %s", connected?"Yes":"No");
-                        connectedV.setText(text);
-                        TextView peerIdV = findViewById(R.id.peerId);
-                        String text2 = String.format("Peer ID: %s", P2pEngine.getInstance().getPeerId());
-                        peerIdV.setText(text2);
-                    }
-                });
+                TextView connectedV = findViewById(R.id.connected);
+                String text = String.format("Connected: %s", connected?"Yes":"No");
+                connectedV.setText(text);
+                TextView peerIdV = findViewById(R.id.peerId);
+                String text2 = String.format("Peer ID: %s", P2pEngine.getInstance().getPeerId());
+                peerIdV.setText(text2);
             }
         });
 
@@ -178,6 +173,12 @@ public class MainActivity extends Activity {
     }
 
     private void startPlay(String url) {
+
+        if (player != null && player.isPlaying()) {
+            player.stop(true);
+            player.release();
+        }
+
         // Convert original playback address (m3u8) to the address of the local proxy server
         String parsedUrl = P2pEngine.getInstance().parseStreamUrl(url);
 
@@ -201,21 +202,17 @@ public class MainActivity extends Activity {
         player.prepare(hlsMediaSource);
         // Start play when ready
         player.setPlayWhenReady(true);
+
     }
 
     private void refreshRatio() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                double ratio = 0;
-                if (totalHttpDownloaded + totalP2pDownloaded != 0) {
-                    ratio = totalP2pDownloaded / (totalHttpDownloaded + totalP2pDownloaded);
-                }
-                TextView ratioV = findViewById(R.id.ratio);
-                String text = String.format("P2P Ratio: %.0f%%", ratio * 100);
-                ratioV.setText(text);
-            }
-        });
+        double ratio = 0;
+        if (totalHttpDownloaded + totalP2pDownloaded != 0) {
+            ratio = totalP2pDownloaded / (totalHttpDownloaded + totalP2pDownloaded);
+        }
+        TextView ratioV = findViewById(R.id.ratio);
+        String text = String.format("P2P Ratio: %.0f%%", ratio * 100);
+        ratioV.setText(text);
     }
 
     private void clearData() {

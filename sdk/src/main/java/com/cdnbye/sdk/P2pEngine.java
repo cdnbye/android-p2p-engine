@@ -1,6 +1,8 @@
 package com.cdnbye.sdk;
 
 import android.content.Context;
+//import android.support.annotation.NonNull;
+//import android.support.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.io.ByteArrayInputStream;
@@ -162,7 +164,9 @@ public final class P2pEngine {
             }
 
             String m3u8Name = originalURL.getPath();
-            localUrlStr = String.format(Locale.ENGLISH, "%s:%d%s", LOCAL_IP, currentPort, m3u8Name);
+            // 计算md5
+            m3u8Name = UtilFunc.md5(m3u8Name.replace(".m3u8", ""));
+            localUrlStr = String.format(Locale.ENGLISH, "%s:%d/%s.m3u8", LOCAL_IP, currentPort, m3u8Name);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Logger.e("Start local server failed");
@@ -458,12 +462,18 @@ public final class P2pEngine {
                     float bufferTime = CBTimer.getInstance().getBufferTime();
                     CBTimer.getInstance().updateBaseTime();
                     CBTimer.getInstance().updateAvailableSpanWithBufferTime(bufferTime);
-                    Segment segment = HttpLoader.loadSegmentSync(seg, headers);
+                    final Segment segment = HttpLoader.loadSegmentSync(seg, headers);
                     if (segment.getBuffer() != null && segment.getBuffer().length > 0) {
                         Logger.i("engine onResponse: " + segment.getBuffer().length + " contentType: " + segment.getContentType() + " segId " + segment.getSegId());
 //                                Logger.i(segId + " sha1:" + UtilFunc.getStringSHA1(seg.getBuffer()));
                         if (listener != null) {
-                            listener.onHttpDownloaded(segment.getBuffer().length / 1024);
+                            TrackerClient.handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onHttpDownloaded(segment.getBuffer().length / 1024);
+                                }
+                            });
+
                         }
                         return Response.newFixedLengthResponse(Status.OK, segment.getContentType(), new ByteArrayInputStream(segment.getBuffer()), segment.getBuffer().length);
 //                        return newChunkedResponse(Response.Status.OK, segment.getContentType(), new ByteArrayInputStream(segment.getBuffer()));

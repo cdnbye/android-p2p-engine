@@ -50,6 +50,10 @@ public final class P2pConfig {
         return channelId;
     }
 
+    public PlayerStatsCallback getPlayerStats() {
+        return playerStats;
+    }
+
     public RTCConfiguration getWebRTCConfig() {
         return webRTCConfig;
     }
@@ -80,6 +84,7 @@ public final class P2pConfig {
     private String mTag;
 
     private ChannelIdCallback channelId;
+    private PlayerStatsCallback playerStats;
     private boolean p2pEnabled;
     private int dcDownloadTimeout;
     private int downloadTimeout;
@@ -107,6 +112,7 @@ public final class P2pConfig {
         this.debug = builder.debug;
         this.logLevel = builder.logLevel;
         this.channelId = builder.channelId;
+        this.playerStats = builder.playerStats;
         this.webRTCConfig = builder.webRTCConfig;
         this.maxPeerConnections = builder.maxPeerConnections;
         this.memoryCacheCountLimit = builder.memoryCacheCountLimit;
@@ -121,6 +127,7 @@ public final class P2pConfig {
         private String wsSignalerAddr = "wss://signal.cdnbye.com";
         private String mTag = "unknown";
         private ChannelIdCallback channelId = null;
+        private PlayerStatsCallback playerStats = null;
         private boolean p2pEnabled = true;
         private int dcDownloadTimeout = 6_000;
         private int downloadTimeout = 10_000;
@@ -191,6 +198,11 @@ public final class P2pConfig {
 
         public Builder channelId(ChannelIdCallback channelId) {
             this.channelId = channelId;
+            return this;
+        }
+
+        public Builder playStats(PlayerStatsCallback playStats) {
+            this.playerStats = playStats;
             return this;
         }
 

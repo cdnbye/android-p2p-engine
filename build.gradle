@@ -18,7 +18,10 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        flatDir{
+            //使用本地aar需要加上这一条
+            dirs 'libs'
+        }
     }
 }
 

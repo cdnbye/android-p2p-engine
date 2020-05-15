@@ -10,6 +10,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a", "armeabi"
+        }
     }
     buildTypes {
         release {
@@ -30,6 +33,18 @@ android {
             abortOnError false
         }
     }
+
+//    repositories {
+//        flatDir {
+//            dirs 'libs'
+//        }
+//    }
+
+//    repositories {
+//        flatDir {
+//            dirs '../sdk/libs'
+//        }
+//    }
 }
 
 dependencies {
@@ -41,7 +56,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'org.webrtc:google-webrtc:1.0.30039'
+//    implementation 'org.webrtc:google-webrtc:1.0.30039'
     implementation 'com.alibaba:fastjson:1.2.58'
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
     implementation 'com.orhanobut:logger:2.2.0'
@@ -49,5 +64,10 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.10.7'
 //    compile 'com.tencent.bugly:crashreport:latest.release'
     //    implementation 'com.cdnbye:sdk:latest.release'
+
+//    implementation 'com.cdnbye:sdk:latest.release'
+
     implementation project(':sdk')
+
+//    compile(name:'webrtc',ext:'aar')
 }
