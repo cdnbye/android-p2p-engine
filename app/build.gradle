@@ -40,11 +40,11 @@ android {
 //        }
 //    }
 
-//    repositories {
-//        flatDir {
-//            dirs '../sdk/libs'
-//        }
-//    }
+    repositories {
+        flatDir {
+            dirs '../sdk/libs'
+        }
+    }
 }
 
 dependencies {
@@ -69,5 +69,7 @@ dependencies {
 
     implementation project(':sdk')
 
-//    compile(name:'webrtc',ext:'aar')
+//    implementation 'com.cdnbye:sdk:1.6.0'
+
+    compile(name:'webrtc',ext:'aar')
 }

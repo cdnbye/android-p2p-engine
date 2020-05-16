@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 //apply plugin: 'com.novoda.bintray-release' // 添加bintray插件 // 发布打开
 
-def SDK_VERSION = "1.6.0"          // 版本号
+def SDK_VERSION = "1.6.1"          // 版本号
 
 android {
     compileSdkVersion 29
@@ -38,16 +38,16 @@ android {
         }
     }
 
-//    repositories {
-//        flatDir {
-//            dirs 'libs'
-//        }
-//    }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-//    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 //    implementation 'com.android.support:support-annotations:28.0.0'
 //    implementation 'com.android.support:appcompat-v7:26.0.1'
     testImplementation 'junit:junit:4.12'
@@ -62,7 +62,7 @@ dependencies {
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 
-//    compile(name:'webrtc',ext:'aar')
+    compile(name:'webrtc',ext:'aar')
 }
 
 // 发布打开
