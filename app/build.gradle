@@ -42,7 +42,7 @@ android {
 
     repositories {
         flatDir {
-            dirs '../sdk/libs'
+            dirs 'libs'
         }
     }
 }
@@ -57,19 +57,21 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 //    implementation 'org.webrtc:google-webrtc:1.0.30039'
+
     implementation 'com.alibaba:fastjson:1.2.58'
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+
     implementation 'com.google.android.exoplayer:exoplayer:2.10.7'
 //    compile 'com.tencent.bugly:crashreport:latest.release'
     //    implementation 'com.cdnbye:sdk:latest.release'
 
 //    implementation 'com.cdnbye:sdk:latest.release'
 
-    implementation project(':sdk')
+//    implementation project(':sdk')
 
-//    implementation 'com.cdnbye:sdk:1.6.0'
+//    implementation 'com.cdnbye:sdk:1.6.2'
 
     compile(name:'webrtc',ext:'aar')
 }
