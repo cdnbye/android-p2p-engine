@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
                 .logEnabled(true)
                 .logLevel(LogLevel.INFO)
                 .p2pEnabled(true)
+                .withTag("exoplayer")
                 .build();
 
         // Instantiate P2pEngine，which is a singleton
@@ -71,6 +72,7 @@ public class MainActivity extends Activity {
                 return player.getBufferedPosition() - player.getCurrentPosition();
             }
         });
+
 
         engine.addP2pStatisticsListener(new P2pStatisticsListener() {
             @Override
