@@ -3,7 +3,9 @@
 <h1 align="center"><a href="" target="_blank" rel="noopener noreferrer"><img width="250" src="https://cdnbye.oss-cn-beijing.aliyuncs.com/pic/cdnbye.png" alt="cdnbye logo"></a></h1>
 <h4 align="center">Live/VOD P2P Engine for Android and Android TV</h4>
 <p align="center">
+<!--
 <a href="https://bintray.com/cdnbye/maven/sdk/_latestVersion"><img src="https://api.bintray.com/packages/cdnbye/maven/sdk/images/download.svg?style=flat" alt="jcenter"></a>
+-->
 <a href="https://android-arsenal.com/api?level=19"><img src="https://img.shields.io/badge/API-19%2B-brightgreen.svg?style=flat" alt="api"></a>
 </p>
 
@@ -14,11 +16,11 @@ CDNBye Android P2P Engine scales live/vod video streaming by peer-to-peer networ
 - Support live and VOD streams over HLS protocol(m3u8)
 - Support encrypted HLS stream
 - Support cache to avoid repeating the download of TS file
-- Very easy to integrate with an existing Android Mobile and Android TV project
 - Support any Android player
 - Efficient scheduling policies to enhance the performance of P2P streaming
 - Highly configurable
 - Use IP database to group up peers by ISP and regions
+- Only use Datachannels and PeerConnection modules in WenRTC, which made smaller SDK size(< 2MB)
 - API frozen, new releases will not break your code
 
 ## Requirements

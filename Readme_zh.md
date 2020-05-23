@@ -3,7 +3,9 @@
 <h1 align="center"><a href="" target="_blank" rel="noopener noreferrer"><img width="250" src="https://cdnbye.oss-cn-beijing.aliyuncs.com/pic/cdnbye.png" alt="cdnbye logo"></a></h1>
 <h4 align="center">视频/直播APP省流量&加速神器.</h4>
 <p align="center">
+<!--
 <a href="https://bintray.com/cdnbye/maven/sdk/_latestVersion"><img src="https://api.bintray.com/packages/cdnbye/maven/sdk/images/download.svg?style=flat" alt="jcenter"></a>
+-->
 <a href="https://android-arsenal.com/api?level=19"><img src="https://img.shields.io/badge/API-19%2B-brightgreen.svg?style=flat" alt="api"></a>
 </p>
 
@@ -14,13 +16,13 @@ P2P技术使观看相同内容的用户之间可以相互分享数据，不仅�
 - 支持基于HLS流媒体协议(m3u8)的直播和点播场景
 - 支持加密HLS传输
 - 支持ts文件缓存从而避免重复下载
-- 几行代码即可在现有项目中快速集成
 - 支持任何安卓播放器
 - 通过预加载形式实现P2P加速，完全不影响用户的播放体验
 - 高可配置化，用户可以根据特定的使用环境调整各个参数
 - 通过有效的调度策略来保证用户的播放体验以及p2p分享率
 - Tracker服务器根据访问IP的ISP、地域等进行智能调度
 - 支持基于安卓系统的手机和智能电视
+- 已将WebRTC无用模块裁减掉，SDK体积不到2MB
 - API已经固化，新版本完全兼容旧版本代码
 
 ## 系统要求

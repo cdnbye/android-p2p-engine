@@ -22,6 +22,9 @@ allprojects {
             //使用本地aar需要加上这一条
             dirs 'libs'
         }
+//        maven {
+//            url  "https://dl.bintray.com/cdnbye/maven"
+//        }
     }
 }
 

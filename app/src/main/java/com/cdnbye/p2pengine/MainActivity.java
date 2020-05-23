@@ -59,16 +59,19 @@ public class MainActivity extends Activity {
                 .logEnabled(true)
                 .logLevel(LogLevel.INFO)
                 .p2pEnabled(true)
-                .playStats(new PlayerStatsCallback() {
-                    @Override
-                    public long onBufferedDuration() {
-                        return player.getBufferedPosition() - player.getCurrentPosition();
-                    }
-                })
                 .build();
 
         // Instantiate P2pEngine，which is a singleton
         P2pEngine engine = P2pEngine.initEngine(getApplicationContext(), "free", config);
+
+        // Recommended while playing living stream
+        engine.setPlayStats(new PlayerStatsCallback() {
+            @Override
+            public long onBufferedDuration() {
+                return player.getBufferedPosition() - player.getCurrentPosition();
+            }
+        });
+
         engine.addP2pStatisticsListener(new P2pStatisticsListener() {
             @Override
             public void onHttpDownloaded(long value) {
