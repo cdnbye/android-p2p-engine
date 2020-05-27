@@ -56,17 +56,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    //    implementation 'org.webrtc:google-webrtc:1.0.30039'
     implementation 'com.alibaba:fastjson:1.2.58'
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.10.7'
     //    compile 'com.tencent.bugly:crashreport:latest.release'
-    //    implementation 'com.cdnbye:sdk:latest.release'
-    //    implementation 'com.cdnbye:sdk:latest.release'
-    //    implementation project(':sdk')
-    //    implementation 'com.cdnbye:sdk:1.6.1'
     compile(name: 'webrtc', ext: 'aar')
-    implementation files('libs/cdnbye-1.7.0.jar')
 }
