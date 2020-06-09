@@ -63,5 +63,5 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.10.7'
     //    compile 'com.tencent.bugly:crashreport:latest.release'
     compile(name: 'webrtc', ext: 'aar')
-    implementation files('libs/cdnbye-1.7.2.jar')
+    implementation files('libs/cdnbye-1.7.5.jar')
 }
