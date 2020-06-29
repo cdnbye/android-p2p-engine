@@ -60,6 +60,7 @@ public class MainActivity extends Activity {
                 .logLevel(LogLevel.INFO)
                 .p2pEnabled(true)
                 .withTag("exoplayer")
+                .channelIdPrefix("cdnbye")
                 .build();
 
         // Instantiate P2pEngine，which is a singleton
