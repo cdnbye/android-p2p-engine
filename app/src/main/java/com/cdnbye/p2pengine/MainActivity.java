@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
                 .build();
 
         // Instantiate P2pEngine，which is a singleton
-        P2pEngine engine = P2pEngine.initEngine(getApplicationContext(), "free", config);
+        P2pEngine engine = P2pEngine.initEngine(getApplicationContext(), "ZMuO5qHZg", config);
 
         // Recommended while playing living stream
         engine.setPlayStats(new PlayerStatsCallback() {
