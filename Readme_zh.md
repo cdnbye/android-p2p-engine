@@ -29,10 +29,10 @@ P2P技术使观看相同内容的用户之间可以相互分享数据，不仅�
 安卓4.4以上版本(API level >= 19)
 
 ## 集成方法
-参照 [文档](https://www.cdnbye.com/views/android/usage.html)
+参照 [文档](https://www.cdnbye.com/cn/views/android/usage.html)
 
 ## API文档
-参照 [API.md](https://www.cdnbye.com/views/android/API.html)
+参照 [API.md](https://www.cdnbye.com/cn/views/android/API.html)
 
 ## 反馈及意见
 当你遇到任何问题时，可以通过在 GitHub 的 repo 提交 issues 来反馈问题，请尽可能的描述清楚遇到的问题，如果有错误信息也一同附带，并且在 Labels 中指明类型为 bug 或者其他。
@@ -46,7 +46,7 @@ P2P技术使观看相同内容的用户之间可以相互分享数据，不仅�
 - [hlsjs-p2p-engine](https://gitee.com/cdnbye/hlsjs-p2p-engine) - 目前最好的Web端P2P流媒体方案。
 
 ## FAQ
-我们收集了一些[常见问题](https://www.cdnbye.com/views/FAQ.html)。在报告issue之前请先查看一下。
+我们收集了一些[常见问题](https://www.cdnbye.com/cn/views/FAQ.html)。在报告issue之前请先查看一下。
 
 ## 联系我们
 邮箱：service@cdnbye.com
