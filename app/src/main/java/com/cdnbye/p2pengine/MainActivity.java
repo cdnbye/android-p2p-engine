@@ -37,6 +37,12 @@ public class MainActivity extends Activity {
     private Button switchBtn;
     private Button vodBtn;
     private Button liveBtn;
+    private TextView offloadV;
+    private TextView uploadV;
+    private TextView peersV;
+    private TextView connectedV;
+    private TextView peerIdV;
+    private TextView ratioV;
     private String currentUrl = VOD;
 //    private String currentUrl = LIVE;
 
@@ -53,6 +59,13 @@ public class MainActivity extends Activity {
 //        CrashReport.initCrashReport(getApplicationContext(), "e40b652a35", true);
 
         setContentView(R.layout.activity_main);
+        offloadV = findViewById(R.id.offload);
+        uploadV = findViewById(R.id.upload);
+        peersV = findViewById(R.id.peers);
+        connectedV = findViewById(R.id.connected);
+        peerIdV = findViewById(R.id.peerId);
+        ratioV = findViewById(R.id.ratio);
+        playerView = findViewById(R.id.player_view);
         TextView versionV = findViewById(R.id.version);
         versionV.setText("Version: " + P2pEngine.Version);
 
@@ -87,7 +100,6 @@ public class MainActivity extends Activity {
             @Override
             public void onP2pDownloaded(long value) {
                 totalP2pDownloaded += (double) value;
-                TextView offloadV = findViewById(R.id.offload);
                 String text = String.format("Offload: %.2fMB", totalP2pDownloaded / 1024);
                 offloadV.setText(text);
 
@@ -97,24 +109,20 @@ public class MainActivity extends Activity {
             @Override
             public void onP2pUploaded(long value) {
                 totalP2pUploaded += (double) value;
-                TextView uploadV = findViewById(R.id.upload);
                 String text = String.format("Upload: %.2fMB", totalP2pUploaded / 1024);
                 uploadV.setText(text);
             }
 
             @Override
             public void onPeers(List<String> peers) {
-                TextView peersV = findViewById(R.id.peers);
                 String text = String.format("Peers: %d", peers.size());
                 peersV.setText(text);
             }
 
             @Override
             public void onServerConnected(boolean connected) {
-                TextView connectedV = findViewById(R.id.connected);
                 String text = String.format("Connected: %s", connected?"Yes":"No");
                 connectedV.setText(text);
-                TextView peerIdV = findViewById(R.id.peerId);
                 String text2 = String.format("Peer ID: %s", P2pEngine.getInstance().getPeerId());
                 peerIdV.setText(text2);
             }
@@ -197,7 +205,6 @@ public class MainActivity extends Activity {
         // Create a player instance.
         player = ExoPlayerFactory.newSimpleInstance(this);
         // Attach player to the view.
-        playerView = findViewById(R.id.player_view);
         playerView.setPlayer(player);
         // Prepare the player with the HLS media source.
         player.prepare(hlsMediaSource);
@@ -211,7 +218,6 @@ public class MainActivity extends Activity {
         if (totalHttpDownloaded + totalP2pDownloaded != 0) {
             ratio = totalP2pDownloaded / (totalHttpDownloaded + totalP2pDownloaded);
         }
-        TextView ratioV = findViewById(R.id.ratio);
         String text = String.format("P2P Ratio: %.0f%%", ratio * 100);
         ratioV.setText(text);
     }
