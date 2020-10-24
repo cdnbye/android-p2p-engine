@@ -28,7 +28,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 public class MainActivity extends Activity {
 
     private final String VOD = "https://www.nmgxwhz.com:65/20200107/17hTnjxI/index.m3u8";
-    private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
+    private final String LIVE = "https://wowza.peer5.com/live/smil:bbb_abr.smil/chunklist_b591000.m3u8";
 
     private PlayerView playerView;
     private SimpleExoPlayer player;
@@ -43,8 +43,8 @@ public class MainActivity extends Activity {
     private TextView connectedV;
     private TextView peerIdV;
     private TextView ratioV;
-    private String currentUrl = VOD;
-//    private String currentUrl = LIVE;
+//    private String currentUrl = VOD;
+    private String currentUrl = LIVE;
 
     private double totalHttpDownloaded = 0;
     private double totalP2pDownloaded = 0;
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
 
         P2pConfig config = new P2pConfig.Builder()
                 .logEnabled(true)
-                .logLevel(LogLevel.INFO)
+                .logLevel(LogLevel.DEBUG)
                 .p2pEnabled(true)
                 .withTag("exoplayer")
                 .channelIdPrefix("cdnbye")
