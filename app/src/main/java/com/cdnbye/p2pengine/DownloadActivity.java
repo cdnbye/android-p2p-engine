@@ -46,8 +46,8 @@ public class DownloadActivity extends BaseActivity {
 
         setContentView(R.layout.activity_download);
 
-        Button file1Btn = findViewById(R.id.file1);
-        Button file2Btn = findViewById(R.id.file2);
+        Button file1Btn = findViewById(R.id.mp4_1);
+        Button file2Btn = findViewById(R.id.mp4_2);
         Button pauseBtn = findViewById(R.id.pause);
         Button stopBtn = findViewById(R.id.stop);
         Button clearBtn = findViewById(R.id.clear);

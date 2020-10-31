@@ -39,37 +39,20 @@ public class MenuActivity extends FragmentActivity {
                 .logEnabled(true)
                 .logLevel(LogLevel.DEBUG)
 //                .diskCacheLimit(1000*1024*1024)
-
 //                .p2pEnabled(false)
 
-                // 测试环境
-                .announce("https://tracker.p2pengine.net:7067/v1")
-//                .wsSignalerAddr("wss://signal.p2pengine.net:8089")
-
-                .localPortHls(-1)
-                .localPortMp4(-1)
-
-                .pieceLength(2024*1024)
+//                .pieceLengthForMp4(1024*1024)
 
                 .build();
 
-        long t1 =  System.currentTimeMillis();
-
-        // 测试环境
-        P2pEngine.init(getApplicationContext(), "U8qIyZDZg", config);
-
-        // 正式环境
-//       P2pEngine.initEngine(getApplicationContext(), "ZMuO5qHZg", config);
-
-        long t2 =  System.currentTimeMillis();
-        System.out.println("P2pEngine init 耗时 " + (t2-t1));
+       P2pEngine.init(getApplicationContext(), "ZMuO5qHZg", config);
 
     }
 
     private List<ListEntry> buildListData() {
         return Arrays.asList(
-//                new ListEntry("Streaming P2P", PlayerActivity.class),
-                new ListEntry("File Download P2P", DownloadActivity.class)
+                new ListEntry("Video P2P", PlayerActivity.class),
+                new ListEntry("Download P2P", DownloadActivity.class)
         );
     }
 

@@ -13,6 +13,8 @@ import com.cdnbye.core.p2p.P2pStatisticsListener;
 import com.cdnbye.core.p2p.PlayerInteractor;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
@@ -24,24 +26,21 @@ import java.util.List;
 
 public class PlayerActivity extends BaseActivity {
 
-    private final String VOD = "https://www.nmgxwhz.com:65/20200107/17hTnjxI/index.m3u8";
-    private final String LIVE = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
+    private final String hls1 = "https://www.nmgxwhz.com:65/20200107/17hTnjxI/index.m3u8";
+    private final String hls2 = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
+    private final String mp4_1 = "http://huya-w20.huya.com/2027/357649831/1300/e0a4cd303b58bab74f809be7f2d09113.mp4";
+    private final String mp4_2 = "http://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4";
 
     private PlayerView playerView;
     private SimpleExoPlayer player;
 
-    private Button hls1Btn;
-    private Button hls2Btn;
-    private Button mp4_1Btn;
-    private Button mp4_2Btn;
     private TextView offloadV;
     private TextView uploadV;
     private TextView peersV;
     private TextView connectedV;
     private TextView peerIdV;
     private TextView ratioV;
-    private String currentUrl = VOD;
-//    private String currentUrl = LIVE;
+    private String currentUrl = hls1;
 
     private double totalHttpDownloaded = 0;
     private double totalP2pDownloaded = 0;
@@ -67,16 +66,13 @@ public class PlayerActivity extends BaseActivity {
         TextView versionV = findViewById(R.id.version);
         versionV.setText("Version: " + P2pEngine.Version);
 
-
-
-        // Recommended while playing living stream
+        // Recommended while playing living stream or mp4
         P2pEngine.getInstance().setplayerInteractor(new PlayerInteractor() {
             @Override
             public long onBufferedDuration() {
                 return player.getBufferedPosition() - player.getCurrentPosition();
             }
         });
-
 
         P2pEngine.getInstance().addP2pStatisticsListener(new P2pStatisticsListener() {
             @Override
@@ -117,21 +113,18 @@ public class PlayerActivity extends BaseActivity {
             }
         });
 
-        startPlay(currentUrl);
+//        startPlay(currentUrl);
 
-        hls1Btn = findViewById(R.id.hls1);
-        hls2Btn = findViewById(R.id.hls2);
-        mp4_1Btn = findViewById(R.id.file1);
-        mp4_2Btn = findViewById(R.id.file2);
+        Button hls1Btn = findViewById(R.id.hls1);
+        Button hls2Btn = findViewById(R.id.hls2);
+        Button mp4_1Btn = findViewById(R.id.mp4_1);
+        Button mp4_2Btn = findViewById(R.id.mp4_2);
 
         hls1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 清空数据
                 clearData();
-                if (player != null && player.isPlaying()) {
-                    player.stop();
-                }
+                currentUrl = hls1;
                 startPlay(currentUrl);
             }
         });
@@ -139,13 +132,8 @@ public class PlayerActivity extends BaseActivity {
         hls2Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currentUrl.equals(VOD)) {
-                    currentUrl = LIVE;
-                } else {
-                    currentUrl = VOD;
-                }
-                // 清空数据
                 clearData();
+                currentUrl = hls2;
                 startPlay(currentUrl);
             }
         });
@@ -154,7 +142,7 @@ public class PlayerActivity extends BaseActivity {
             public void onClick(View view) {
                 // 清空数据
                 clearData();
-                currentUrl = VOD;
+                currentUrl = mp4_1;
                 startPlay(currentUrl);
             }
         });
@@ -164,7 +152,7 @@ public class PlayerActivity extends BaseActivity {
             public void onClick(View view) {
                 // 清空数据
                 clearData();
-                currentUrl = LIVE;
+                currentUrl = mp4_2;
                 startPlay(currentUrl);
             }
         });
@@ -172,34 +160,42 @@ public class PlayerActivity extends BaseActivity {
 
     private void startPlay(String url) {
 
-        if (player != null && player.isPlaying()) {
+        if (player != null && (player.isPlaying() || player.isLoading())) {
             player.stop(true);
             player.release();
         }
-
         // Convert original playback address (m3u8) to the address of the local proxy server
         String parsedUrl = P2pEngine.getInstance().parseStreamUrl(url);
 
-        // Create a data source factory.
-        DataSource.Factory dataSourceFactory =
-                new DefaultHttpDataSourceFactory(
-                        Util.getUserAgent(this, "p2p-engine"),
-                        DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
-                        DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
-                        true   /* allowCrossProtocolRedirects */
-                );
-        // Create a HLS media source pointing to a playlist uri.
-        HlsMediaSource hlsMediaSource =
-                new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(parsedUrl));
         // Create a player instance.
         player = ExoPlayerFactory.newSimpleInstance(this);
         // Attach player to the view.
         playerView.setPlayer(player);
-        // Prepare the player with the HLS media source.
-        player.prepare(hlsMediaSource);
+        // Prepare the player with media source.
+        MediaSource mediaSource = buildMediaSource(Uri.parse(parsedUrl));
+
+        player.prepare(mediaSource);
         // Start play when ready
         player.setPlayWhenReady(true);
 
+    }
+
+    private MediaSource buildMediaSource(Uri uri) {
+        if (uri.getPath().endsWith(".m3u8")) {
+            // Create a data source factory.
+            DataSource.Factory dataSourceFactory =
+                    new DefaultHttpDataSourceFactory(
+                            Util.getUserAgent(this, "p2p-engine"),
+                            DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+                            DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+                            true   /* allowCrossProtocolRedirects */
+                    );
+            // Create a HLS media source pointing to a playlist uri.
+            return new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
+        }
+        return new ExtractorMediaSource.Factory(
+                new DefaultHttpDataSourceFactory("p2p-engine")).
+                createMediaSource(uri);
     }
 
     private void refreshRatio() {
