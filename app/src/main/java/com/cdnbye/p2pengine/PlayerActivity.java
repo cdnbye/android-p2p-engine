@@ -27,7 +27,7 @@ import java.util.List;
 public class PlayerActivity extends BaseActivity {
 
     private final String hls1 = "https://www.nmgxwhz.com:65/20200107/17hTnjxI/index.m3u8";
-    private final String hls2 = "http://hefeng.live.tempsource.cjyun.org/videotmp/s10100-hftv.m3u8";
+    private final String hls2 = "https://wowza.peer5.com/live/smil:bbb_abr.smil/chunklist_b591000.m3u8";
     private final String mp4_1 = "http://huya-w20.huya.com/2027/357649831/1300/e0a4cd303b58bab74f809be7f2d09113.mp4";
     private final String mp4_2 = "http://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4";
 
