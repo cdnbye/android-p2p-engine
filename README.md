@@ -23,6 +23,9 @@ CDNBye Android P2P Engine scales live/vod video streaming by peer-to-peer networ
 - Use IP database to group up peers by ISP and regions
 - Only use Datachannels and PeerConnection modules in WenRTC, which made smaller SDK size(< 2MB)
 
+## Demo
+Download demo apk [here](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/app-debug.apk)
+
 ## Requirements
 Android Version Support: Kitkat 4.4(API level >= 19)
 
