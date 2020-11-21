@@ -67,7 +67,7 @@ public class PlayerActivity extends BaseActivity {
         versionV.setText("Version: " + P2pEngine.Version);
 
         // Recommended while playing living stream or mp4
-        P2pEngine.getInstance().setplayerInteractor(new PlayerInteractor() {
+        P2pEngine.getInstance().setPlayerInteractor(new PlayerInteractor() {
             @Override
             public long onBufferedDuration() {
                 return player.getBufferedPosition() - player.getCurrentPosition();
@@ -83,7 +83,7 @@ public class PlayerActivity extends BaseActivity {
             }
 
             @Override
-            public void onP2pDownloaded(long value) {
+            public void onP2pDownloaded(long value, int speed) {
                 totalP2pDownloaded += (double) value;
                 String text = String.format("Offload: %.2fMB", totalP2pDownloaded / 1024);
                 offloadV.setText(text);
