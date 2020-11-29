@@ -13,7 +13,18 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="150dp"
         android:layout_marginTop="50px"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50px"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:singleLine="false"
+        android:gravity="left"
+        android:textColor="#FF0000"
+        android:text="1. Please run on real device\n2. Open same video on 2 devices to check p2p performance"
+        android:textSize="18sp" />
 
 </LinearLayout>
