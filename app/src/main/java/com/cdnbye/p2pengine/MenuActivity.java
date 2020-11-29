@@ -38,11 +38,6 @@ public class MenuActivity extends FragmentActivity {
         P2pConfig config = new P2pConfig.Builder()
                 .logEnabled(true)
                 .logLevel(LogLevel.DEBUG)
-//                .diskCacheLimit(1000*1024*1024)
-//                .p2pEnabled(false)
-
-//                .pieceLengthForMp4(1024*1024)
-
                 .build();
 
        P2pEngine.init(getApplicationContext(), "ZMuO5qHZg", config);

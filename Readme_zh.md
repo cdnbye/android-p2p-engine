@@ -27,7 +27,7 @@ P2P技术使观看相同内容的用户之间可以相互分享数据，不仅�
 - 已将WebRTC无用模块裁减掉，SDK体积不到2MB
 
 ## Demo
-下载测试 [apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/app-debug.apk)
+下载测试 [demo.apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)
 
 ## 系统要求
 安卓4.4以上版本(API level >= 19)
