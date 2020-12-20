@@ -14,6 +14,7 @@ P2P技术使观看相同内容的用户之间可以相互分享数据，不仅�
 该插件的优势如下：
 - 可与CDNBye Web端和[iOS端](https://github.com/cdnbye/ios-p2p-engine)SDK互联互通
 - 支持基于HLS流媒体协议(m3u8)的直播和点播场景
+- 支持基于MPEG-DASH流媒体协议的直播和点播场景
 - 支持加密HLS传输和防盗链技术
 - 支持MP4点播场景
 - 支持文件下载

@@ -13,6 +13,7 @@ CDNBye Android P2P Engine scales live/vod video streaming by peer-to-peer networ
 
 ## Features
 - Support live and VOD streams over HLS protocol(m3u8)
+- Support live and VOD streams over MPEG-DASH protocol
 - Support MP4 streaming
 - Support file download
 - Support encrypted HLS stream
