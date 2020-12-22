@@ -52,7 +52,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation 'com.alibaba:fastjson:1.2.58'
-    implementation 'org.java-websocket:Java-WebSocket:1.4.0'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.1'
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 

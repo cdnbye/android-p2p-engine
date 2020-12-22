@@ -10,6 +10,9 @@ import android.widget.ListView;
 import androidx.fragment.app.FragmentActivity;
 import java.util.Arrays;
 import java.util.List;
+
+import com.cdnbye.core.p2p.EngineExceptionListener;
+import com.cdnbye.core.utils.EngineException;
 import com.cdnbye.core.utils.LogLevel;
 import com.cdnbye.core.p2p.P2pConfig;
 import com.cdnbye.sdk.P2pEngine;
@@ -38,10 +41,32 @@ public class MenuActivity extends FragmentActivity {
         P2pConfig config = new P2pConfig.Builder()
                 .logEnabled(true)
                 .logLevel(LogLevel.DEBUG)
+                .p2pEnabled(true)
                 .build();
 
-       P2pEngine.init(getApplicationContext(), "ZMuO5qHZg", config);
+        P2pEngine.init(getApplicationContext(), "ZMuO5qHZg", config);
 
+        P2pEngine.getInstance().registerExceptionListener(new EngineExceptionListener() {
+            @Override
+            public void onTrackerException(EngineException e) {
+                System.out.println("onTrackerException " + e.getMessage());
+            }
+
+            @Override
+            public void onSignalException(EngineException e) {
+                System.out.println("onSignalException " + e.getMessage());
+            }
+
+            @Override
+            public void onSchedulerException(EngineException e) {
+                System.out.println("onSchedulerException " + e.getMessage());
+            }
+
+            @Override
+            public void onOtherException(EngineException e) {
+                System.out.println("onOtherException " + e.getMessage());
+            }
+        });
     }
 
     private List<ListEntry> buildListData() {

@@ -13,4 +13,5 @@
 /captures
 .externalNativeBuild
 /app/release
+/app/libs
 sdk

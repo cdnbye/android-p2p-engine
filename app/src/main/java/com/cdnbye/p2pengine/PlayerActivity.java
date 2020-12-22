@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
@@ -26,10 +27,12 @@ import java.util.List;
 
 public class PlayerActivity extends BaseActivity {
 
-    private final String hls1 = "http://tudou.diediao-kuyun.com/20200515/19350_8af4c25d/index.m3u8";
+//    private final String hls1 = "http://tudou.diediao-kuyun.com/20200515/19350_8af4c25d/index.m3u8";
+    private final String hls1 = "https://video.cdnbye.com/0cf6732evodtransgzp1257070836/e0d4b12e5285890803440736872/v.f100220.m3u8";
     private final String hls2 = "https://wowza.peer5.com/live/smil:bbb_abr.smil/chunklist_b591000.m3u8";
-    private final String mp4_1 = "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319212559089721.mp4";
-    private final String mp4_2 = "http://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4";
+    private final String mp4_1 = "https://d2zihajmogu5jn.cloudfront.net/elephantsdream/ed_hd.mp4";
+    private final String mp4_2 = "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319212559089721.mp4";
+    private final String dash1 = "https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd";
 
     private PlayerView playerView;
     private SimpleExoPlayer player;
@@ -119,6 +122,7 @@ public class PlayerActivity extends BaseActivity {
         Button hls2Btn = findViewById(R.id.hls2);
         Button mp4_1Btn = findViewById(R.id.mp4_1);
         Button mp4_2Btn = findViewById(R.id.mp4_2);
+        Button dash1Btn = findViewById(R.id.dash1);
 
         hls1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +144,6 @@ public class PlayerActivity extends BaseActivity {
         mp4_1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 清空数据
                 clearData();
                 currentUrl = mp4_1;
                 startPlay(currentUrl);
@@ -150,12 +153,20 @@ public class PlayerActivity extends BaseActivity {
         mp4_2Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 清空数据
                 clearData();
                 currentUrl = mp4_2;
                 startPlay(currentUrl);
             }
         });
+        dash1Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearData();
+                currentUrl = dash1;
+                startPlay(currentUrl);
+            }
+        });
+
     }
 
     private void startPlay(String url) {
@@ -192,9 +203,23 @@ public class PlayerActivity extends BaseActivity {
                     );
             // Create a HLS media source pointing to a playlist uri.
             return new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
+        } else if (uri.getPath().endsWith("mpd")) {
+            // Create a data source factory.
+            DataSource.Factory dataSourceFactory =
+                    new DefaultHttpDataSourceFactory(
+                            Util.getUserAgent(this, "p2p-engine"),
+                            DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+                            DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+                            true   /* allowCrossProtocolRedirects */
+                    );
+            // Create a DASH media source pointing to a DASH manifest uri.
+            MediaSource mediaSource =
+                    new DashMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(uri);
+            return mediaSource;
         }
         return new ExtractorMediaSource.Factory(
-                new DefaultHttpDataSourceFactory("p2p-engine")).
+                new DefaultHttpDataSourceFactory("exoplayer-codelab")).
                 createMediaSource(uri);
     }
 
@@ -219,4 +244,5 @@ public class PlayerActivity extends BaseActivity {
         super.onDestroy();
         if (player != null) player.release();
     }
+    
 }

@@ -30,6 +30,9 @@ Download demo apk [here](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/
 ## Requirements
 Android Version Support: Kitkat 4.4(API level >= 19)
 
+## Build
+Download the latest version [SDK](http://www.cdnbye.com/en/views/android/v2/usage.html#import-sdk)，then copy it to app/libs .
+
 ## Integration
 See [document](https://www.hdtvcloud.com/en/views/android/v2/usage.html)
 
