@@ -14,5 +14,5 @@
 .externalNativeBuild
 /app/release
 /app/debug
-/app/libs
+/app/libs/*.jar
 sdk
