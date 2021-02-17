@@ -119,7 +119,7 @@ public class DownloadActivity extends BaseActivity {
             }
         });
 
-        startDownload(currentUrl);
+//        startDownload(currentUrl);
 
         P2pEngine.getInstance().registerFileDownloadListener(new FileDownloadListener() {
             @Override

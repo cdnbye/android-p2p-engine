@@ -116,8 +116,6 @@ public class PlayerActivity extends BaseActivity {
             }
         });
 
-//        startPlay(currentUrl);
-
         Button hls1Btn = findViewById(R.id.hls1);
         Button hls2Btn = findViewById(R.id.hls2);
         Button mp4_1Btn = findViewById(R.id.mp4_1);
@@ -169,12 +167,14 @@ public class PlayerActivity extends BaseActivity {
 
     }
 
-    private void startPlay(String url) {
+    private synchronized void startPlay(String url) {
 
-        if (player != null && (player.isPlaying() || player.isLoading())) {
+        if (player != null) {
             player.stop(true);
             player.release();
+            player = null;
         }
+
         // Convert original playback address (m3u8) to the address of the local proxy server
         String parsedUrl = P2pEngine.getInstance().parseStreamUrl(url);
 
@@ -242,7 +242,10 @@ public class PlayerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (player != null) player.release();
+        if (player != null) {
+            player.release();
+            player = null;
+        }
     }
     
 }
