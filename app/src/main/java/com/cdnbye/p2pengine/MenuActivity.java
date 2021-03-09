@@ -42,6 +42,7 @@ public class MenuActivity extends FragmentActivity {
                 .logEnabled(true)
                 .logLevel(LogLevel.DEBUG)
                 .p2pEnabled(true)
+                .waitForPeer(true)
                 .build();
 
         P2pEngine.init(getApplicationContext(), "ZMuO5qHZg", config);
