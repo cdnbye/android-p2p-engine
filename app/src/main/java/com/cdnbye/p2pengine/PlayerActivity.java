@@ -11,13 +11,17 @@ import com.cdnbye.sdk.P2pEngine;
 
 import com.cdnbye.core.p2p.P2pStatisticsListener;
 import com.cdnbye.core.p2p.PlayerInteractor;
+import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -178,8 +182,18 @@ public class PlayerActivity extends BaseActivity {
         // Convert original playback address (m3u8) to the address of the local proxy server
         String parsedUrl = P2pEngine.getInstance().parseStreamUrl(url);
 
+        // Create LoadControl
+        LoadControl loadControl = new DefaultLoadControl.Builder()
+                .setAllocator(new DefaultAllocator(true, 16))
+                .setBufferDurationsMs(VideoPlayerConfig.MIN_BUFFER_DURATION,
+                        VideoPlayerConfig.MAX_BUFFER_DURATION,
+                        VideoPlayerConfig.MIN_PLAYBACK_START_BUFFER,
+                        VideoPlayerConfig.MIN_PLAYBACK_RESUME_BUFFER)
+                .setTargetBufferBytes(-1)
+                .setPrioritizeTimeOverSizeThresholds(true).createDefaultLoadControl();
+
         // Create a player instance.
-        player = ExoPlayerFactory.newSimpleInstance(this);
+        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(), loadControl);
         // Attach player to the view.
         playerView.setPlayer(player);
         // Prepare the player with media source.
@@ -247,5 +261,15 @@ public class PlayerActivity extends BaseActivity {
             player = null;
         }
     }
-    
+
+    class VideoPlayerConfig {
+        //Minimum Video you want to buffer while Playing
+        public static final int MIN_BUFFER_DURATION = 7000;
+        //Max Video you want to buffer during PlayBack
+        public static final int MAX_BUFFER_DURATION = 15000;
+        //Min Video you want to buffer before start Playing it
+        public static final int MIN_PLAYBACK_START_BUFFER = 7000;
+        //Min video You want to buffer when user resumes video
+        public static final int MIN_PLAYBACK_RESUME_BUFFER = 7000;
+    }
 }
