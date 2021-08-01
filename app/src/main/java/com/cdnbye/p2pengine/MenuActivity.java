@@ -72,8 +72,8 @@ public class MenuActivity extends FragmentActivity {
 
     private List<ListEntry> buildListData() {
         return Arrays.asList(
-                new ListEntry("Video P2P", PlayerActivity.class),
-                new ListEntry("Download P2P", DownloadActivity.class)
+                new ListEntry("Video Stream P2P", PlayerActivity.class),
+                new ListEntry("File Download P2P", DownloadActivity.class)
         );
     }
 
