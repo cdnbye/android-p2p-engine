@@ -79,6 +79,11 @@ public class PlayerActivity extends BaseActivity {
             public long onBufferedDuration() {
                 return player.getBufferedPosition() - player.getCurrentPosition();
             }
+
+            @Override
+            public long onCurrentPosition() {
+                return player.getCurrentPosition();
+            }
         });
 
         P2pEngine.getInstance().addP2pStatisticsListener(new P2pStatisticsListener() {
@@ -99,7 +104,7 @@ public class PlayerActivity extends BaseActivity {
             }
 
             @Override
-            public void onP2pUploaded(long value) {
+            public void onP2pUploaded(long value, int speed) {
                 totalP2pUploaded += (double) value;
                 String text = String.format("Upload: %.2fMB", totalP2pUploaded / 1024);
                 uploadV.setText(text);

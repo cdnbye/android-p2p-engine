@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.cdnbye.core.p2p.EngineExceptionListener;
+import com.cdnbye.core.utils.AnnounceLocation;
 import com.cdnbye.core.utils.EngineException;
 import com.cdnbye.core.utils.LogLevel;
 import com.cdnbye.core.p2p.P2pConfig;
@@ -39,6 +40,7 @@ public class MenuActivity extends FragmentActivity {
         });
 
         P2pConfig config = new P2pConfig.Builder()
+                .announceLocation(AnnounceLocation.China)
                 .logEnabled(true)
                 .logLevel(LogLevel.DEBUG)
                 .p2pEnabled(true)

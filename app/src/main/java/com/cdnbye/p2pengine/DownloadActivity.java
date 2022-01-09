@@ -86,7 +86,7 @@ public class DownloadActivity extends BaseActivity {
             }
 
             @Override
-            public void onP2pUploaded(long value) {
+            public void onP2pUploaded(long value, int speed) {
                 totalP2pUploaded += (double)value;
                 runOnUiThread(new Runnable() {
                     @Override
