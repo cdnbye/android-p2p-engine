@@ -6,7 +6,7 @@
 </p>
 
 ## About
-This is a demo for CDNBye Android SDK.
+This is a demo for CDNBye Android SDK v3.
 
 ## Demo APP
 Download demo apk [here](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)

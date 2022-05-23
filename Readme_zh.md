@@ -6,7 +6,7 @@
 </p>
 
 ## 关于
-本项目是 CDNBye Android SDK 的演示demo。
+本项目是 CDNBye Android SDK v3 的演示demo。
 
 ## Demo APP
 下载测试 [demo.apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)
