@@ -31,7 +31,6 @@ import java.util.List;
 
 public class PlayerActivity extends BaseActivity {
 
-//    private final String hls1 = "http://tudou.diediao-kuyun.com/20200515/19350_8af4c25d/index.m3u8";
     private final String hls1 = "https://video.cdnbye.com/0cf6732evodtransgzp1257070836/e0d4b12e5285890803440736872/v.f100220.m3u8";
     private final String hls2 = "https://wowza.peer5.com/live/smil:bbb_abr.smil/chunklist_b591000.m3u8";
     private final String mp4_1 = "https://d2zihajmogu5jn.cloudfront.net/elephantsdream/ed_hd.mp4";
