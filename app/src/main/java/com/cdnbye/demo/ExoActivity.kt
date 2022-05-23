@@ -36,8 +36,11 @@ class ExoActivity : BaseActivity() {
 
         P2pEngine.instance?.setPlayerInteractor(object : PlayerInteractor() {
             override fun onBufferedDuration(): Long {
-                val playerLocal = player ?: return -1
-                return playerLocal.bufferedPosition - playerLocal.currentPosition
+                return if (player != null) {
+                    player!!.bufferedPosition - player!!.currentPosition
+                } else {
+                    -1
+                }
             }
         })
 
