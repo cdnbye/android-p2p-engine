@@ -9,7 +9,7 @@
 本项目是 CDNBye Android SDK v3 的演示demo。
 
 ## Demo APP
-下载测试 [demo.apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)
+下载测试 [demo_v3.apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo_v3.apk)
 
 ## 系统要求
 安卓5.0以上版本(API level >= 21)

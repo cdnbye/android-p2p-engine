@@ -9,7 +9,7 @@
 This is a demo for CDNBye Android SDK v3.
 
 ## Demo APP
-Download demo apk [here](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)
+Download demo apk [here](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo_v3.apk)
 
 ## Requirements
 Android Version Support: Lollipop 5.0(API level >= 21)
