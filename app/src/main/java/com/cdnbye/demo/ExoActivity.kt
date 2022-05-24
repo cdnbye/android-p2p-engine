@@ -28,11 +28,7 @@ class ExoActivity : BaseActivity() {
         exoBinding = ActivityExoBinding.inflate(layoutInflater)
         setContentView(exoBinding.root)
 
-        "Version: ${P2pEngine.Version} | ${P2pEngine.protocolVersion}".also { exoBinding.version.text = it }
-
-//        P2pEngine.instance?.setHlsSegmentIdGenerator { streamId, sn, segmentUrl, range ->
-//            "$segmentUrl|$range"
-//        }
+        "Version: ${P2pEngine.version} | ${P2pEngine.protocolVersion}".also { exoBinding.version.text = it }
 
         P2pEngine.instance?.setPlayerInteractor(object : PlayerInteractor() {
             override fun onBufferedDuration(): Long {
