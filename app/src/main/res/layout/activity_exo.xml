@@ -147,6 +147,36 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/dash1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="#03A9F4"
+                    android:gravity="center"
+                    android:text="DASH1"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/dash2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="#F44336"
+                    android:gravity="center"
+                    android:text="DASH2"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
@@ -159,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_corner"
                     android:minLines="2"
-                    android:hint=" custom m3u8..."
+                    android:hint=" custom m3u8 or mpd..."
                     android:inputType="textMultiLine" />
 
                 <Button

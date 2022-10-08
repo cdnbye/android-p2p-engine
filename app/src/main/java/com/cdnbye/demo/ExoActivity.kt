@@ -4,6 +4,8 @@ import android.net.Uri
 import android.os.Bundle
 import com.cdnbye.demo.databinding.ActivityExoBinding
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultAllocator
@@ -11,10 +13,13 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.p2pengine.core.p2p.P2pStatisticsListener
 import com.p2pengine.core.p2p.PlayerInteractor
 import com.p2pengine.sdk.P2pEngine
+import java.lang.RuntimeException
 
 class ExoActivity : BaseActivity() {
     private val hls1 = "https://video.cdnbye.com/0cf6732evodtransgzp1257070836/e0d4b12e5285890803440736872/v.f100220.m3u8"
     private val hls2 = "https://wowza.peer5.com/live/smil:bbb_abr.smil/chunklist_b591000.m3u8"
+    private val dash1 = "https://bitmovin-a.akamaihd.net/content/MI20192708/stream.mpd"
+    private val dash2 = "https://wowza.peer5.com/live/smil:bbb_abr.smil/manifest.mpd"
 
     private lateinit var exoBinding: ActivityExoBinding
     private var player: ExoPlayer? = null
@@ -41,20 +46,20 @@ class ExoActivity : BaseActivity() {
         })
 
         P2pEngine.instance?.addP2pStatisticsListener(object : P2pStatisticsListener {
-            override fun onHttpDownloaded(value: Long) {
+            override fun onHttpDownloaded(value: Int) {
                 println("onHttpDownloaded $value")
                 totalHttpDownloaded += value.toDouble()
                 refreshRatio()
             }
 
-            override fun onP2pDownloaded(value: Long, speed: Int) {
+            override fun onP2pDownloaded(value: Int, speed: Int) {
                 println("p2p download speed $speed")
                 totalP2pDownloaded += value.toDouble()
                 exoBinding.offload.text = String.format("Offload: %.2fMB", totalP2pDownloaded / 1024)
                 refreshRatio()
             }
 
-            override fun onP2pUploaded(value: Long, speed: Int) {
+            override fun onP2pUploaded(value: Int, speed: Int) {
                 totalP2pUploaded += value.toDouble()
                 exoBinding.upload.text = String.format("Upload: %.2fMB", totalP2pUploaded / 1024)
             }
@@ -77,6 +82,18 @@ class ExoActivity : BaseActivity() {
 
         exoBinding.hls2.setOnClickListener {
             currentUrl = hls2
+            clearData()
+            startPlay(currentUrl)
+        }
+
+        exoBinding.dash1.setOnClickListener {
+            currentUrl = dash1
+            clearData()
+            startPlay(currentUrl)
+        }
+
+        exoBinding.dash2.setOnClickListener {
+            currentUrl = dash2
             clearData()
             startPlay(currentUrl)
         }
@@ -114,14 +131,23 @@ class ExoActivity : BaseActivity() {
 
         // Create a data source factory.
         val dataSourceFactory: DataSource.Factory = DefaultHttpDataSource.Factory()
-        // Create a HLS media source pointing to a playlist uri.
-        val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(parsedUrl)))
+        val uri = Uri.parse(url)
+        val mediaSource: MediaSource = if (uri.path!!.endsWith(".m3u8")) {
+            // Create a HLS media source pointing to a playlist uri.
+            HlsMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(parsedUrl)))
+        } else if (uri.path!!.endsWith(".mpd")) {
+            // Create a DASH media source pointing to a playlist uri.
+            DashMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(parsedUrl)))
+        } else {
+            throw RuntimeException("no such media type")
+        }
+
         // Create a player instance.
         player = ExoPlayer.Builder(applicationContext)
             .setLoadControl(loadControl)
             .build()
         // Set the media source to be played.
-        player?.setMediaSource(hlsMediaSource)
+        player?.setMediaSource(mediaSource)
         // Prepare the player.
         player?.prepare()
         // Attach player to the view.
