@@ -2,3 +2,4 @@
 libs/*.jar
 libs/*.aar
 release/
+debug/
