@@ -17,8 +17,8 @@ Android Version Support: Kitkat 4.4(API level >= 19)
 ## Usage
 - Clone the project
 - Install dependencies by gradle
-- Download the latest version [SDK](http://www.cdnbye.com/en/views/android/v3/usage.html#import-sdk)，then copy it to app/libs
-- Download the P2P library [datachannel.aar](https://github.com/swarm-cloud/datachannel-native/releases/download/1.0.2/datachannel.aar)，then copy it to app/libs
+- Download the latest version [SDK](https://github.com/cdnbye/android-p2p-engine/releases)，then copy it to app/libs
+- Download the P2P library [datachannel.aar](https://github.com/swarm-cloud/datachannel-native/releases)，then copy it to app/libs
 - Run on real device
 
 ## Issue & Feature Request

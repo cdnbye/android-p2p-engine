@@ -17,8 +17,8 @@
 ## 使用方法
 - 将本项目克隆到本地
 - 用 gradle 安装依赖
-- 下载最新版本的安卓[SDK](http://www.cdnbye.com/cn/views/android/v3/usage.html#%E5%AF%BC%E5%85%A5sdk)，并拷贝到工程的 app/libs 目录下
-- 下载P2P传输库 [datachannel.aar](https://github.com/swarm-cloud/datachannel-native/releases/download/1.0.2/datachannel.aar)并拷贝到工程的 app/libs 目录下
+- 下载最新版本的安卓[SDK](https://github.com/cdnbye/android-p2p-engine/releases)，并拷贝到工程的 app/libs 目录下
+- 下载P2P传输库 [datachannel.aar](https://github.com/swarm-cloud/datachannel-native/releases)并拷贝到工程的 app/libs 目录下
 - 在真机运行本项目
 
 ## 反馈及意见
