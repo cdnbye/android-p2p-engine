@@ -12,13 +12,13 @@
 下载测试 [demo_v3.apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo_v3.apk)
 
 ## 系统要求
-安卓5.0以上版本(API level >= 21)
+安卓4.4以上版本(API level >= 19)
 
 ## 使用方法
 - 将本项目克隆到本地
 - 用 gradle 安装依赖
 - 下载最新版本的安卓[SDK](http://www.cdnbye.com/cn/views/android/v3/usage.html#%E5%AF%BC%E5%85%A5sdk)，并拷贝到工程的 app/libs 目录下
-- 下载WebRTC库 [webrtc.aar](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/webrtc.aar)并拷贝到工程的 app/libs 目录下
+- 下载P2P传输库 [datachannel.aar](https://github.com/swarm-cloud/datachannel-native/releases/download/1.0.2/datachannel.aar)并拷贝到工程的 app/libs 目录下
 - 在真机运行本项目
 
 ## 反馈及意见

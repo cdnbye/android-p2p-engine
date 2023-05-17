@@ -8,10 +8,11 @@ import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import android.widget.ListView
 import androidx.fragment.app.FragmentActivity
+import androidx.multidex.MultiDex
 import com.cdnbye.demo.databinding.ActivityMenuBinding
 import com.p2pengine.core.p2p.EngineExceptionListener
 import com.p2pengine.core.p2p.P2pConfig
-import com.p2pengine.core.utils.AnnounceLocation
+import com.p2pengine.core.tracking.TrackerZone
 import com.p2pengine.core.utils.EngineException
 import com.p2pengine.core.utils.LogLevel
 import com.p2pengine.sdk.P2pEngine
@@ -23,6 +24,7 @@ class MenuActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MultiDex.install(this)
         menuBinding = ActivityMenuBinding.inflate(layoutInflater)
 
         setContentView(menuBinding.root)
@@ -46,9 +48,9 @@ class MenuActivity : FragmentActivity() {
             .p2pEnabled(true)
             .logEnabled(true)
             .logLevel(LogLevel.DEBUG)
-            .announceLocation(AnnounceLocation.China)
-//            .announceLocation(AnnounceLocation.HongKong)
-//            .announceLocation(AnnounceLocation.USA)
+            .trackerZone(TrackerZone.Europe)
+//            .trackerZone(TrackerZone.HongKong)
+//            .trackerZone(TrackerZone.USA)
             .build()
 
         println("MainActivity P2pEngine init")
