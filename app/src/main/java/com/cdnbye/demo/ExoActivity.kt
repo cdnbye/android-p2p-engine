@@ -19,7 +19,7 @@ class ExoActivity : BaseActivity() {
     private val hls1 = "https://video.cdnbye.com/0cf6732evodtransgzp1257070836/e0d4b12e5285890803440736872/v.f100220.m3u8"
     private val hls2 = "https://stream.swarmcloud.net:2096/hls/sintel/playlist.m3u8"
     private val dash1 = "https://bitmovin-a.akamaihd.net/content/MI20192708/stream.mpd"
-    private val dash2 = "https://wowza.peer5.com/live/smil:bbb_abr.smil/manifest.mpd"
+    private val dash2 = "https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd"
 
     private lateinit var exoBinding: ActivityExoBinding
     private var player: ExoPlayer? = null
@@ -33,7 +33,7 @@ class ExoActivity : BaseActivity() {
         exoBinding = ActivityExoBinding.inflate(layoutInflater)
         setContentView(exoBinding.root)
 
-        "Version: ${P2pEngine.version} | ${P2pEngine.protocolVersion}".also { exoBinding.version.text = it }
+        "Version: ${P2pEngine.version}".also { exoBinding.version.text = it }
 
         P2pEngine.instance?.setPlayerInteractor(object : PlayerInteractor() {
             override fun onBufferedDuration(): Long {

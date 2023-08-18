@@ -9,7 +9,7 @@
 本项目是 CDNBye Android SDK v3 的演示demo。
 
 ## Demo APP
-下载测试 [demo_v3.apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo_v3.apk)
+下载测试 [demo.apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)
 
 ## 系统要求
 安卓4.4以上版本(API level >= 19)
@@ -17,8 +17,7 @@
 ## 使用方法
 - 将本项目克隆到本地
 - 用 gradle 安装依赖
-- 下载最新版本的安卓[SDK](https://github.com/cdnbye/android-p2p-engine/releases)，并拷贝到工程的 app/libs 目录下
-- 下载P2P传输库 [datachannel.aar](https://github.com/swarm-cloud/datachannel-native/releases)并拷贝到工程的 app/libs 目录下
+下载最新版本的安卓SDK[swarmcloud.jar和datachannel.aar](https://github.com/cdnbye/android-p2p-engine/releases)，并拷贝到工程的 libs 目录下。
 - 在真机运行本项目
 
 ## 反馈及意见
