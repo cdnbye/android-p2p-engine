@@ -17,7 +17,7 @@
 ## 使用方法
 - 将本项目克隆到本地
 - 用 gradle 安装依赖
-下载最新版本的安卓SDK[swarmcloud.jar和datachannel.aar](https://github.com/cdnbye/android-p2p-engine/releases)，并拷贝到工程的 libs 目录下。
+- 下载最新版本的安卓SDK[swarmcloud.jar和datachannel.aar](https://github.com/cdnbye/android-p2p-engine/releases)，并拷贝到工程的 libs 目录下。
 - 在真机运行本项目
 
 ## 反馈及意见

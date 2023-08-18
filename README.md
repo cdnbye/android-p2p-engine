@@ -17,7 +17,7 @@ Android Version Support: Kitkat 4.4(API level >= 19)
 ## Usage
 - Clone the project
 - Install dependencies by gradle
-Download the latest version SDK [swarmcloud.jar and datachannel.aar](https://github.com/cdnbye/android-p2p-engine/releases)，then copy it to app/libs
+- Download the latest version SDK [swarmcloud.jar and datachannel.aar](https://github.com/cdnbye/android-p2p-engine/releases)，then copy it to app/libs
 - Run on real device
 
 ## Issue & Feature Request
