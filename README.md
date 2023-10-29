@@ -30,7 +30,7 @@ Android Version Support: Kitkat 4.4(API level >= 19)
 - [hlsjs-p2p-engine](https://github.com/cdnbye/hlsjs-p2p-engine) - Web Video Delivery Technology with No Plugins.
 
 ## FAQ
-We have collected some [frequently asked questions](https://www.hdtvcloud.com/en/views/FAQ.html). Before reporting an issue, please search if the FAQ has the answer to your problem.
+We have collected some [frequently asked questions](https://docs.swarmcloud.net/faq). Before reporting an issue, please search if the FAQ has the answer to your problem.
 
 ## Contact Us
 Email：service@cdnbye.com
