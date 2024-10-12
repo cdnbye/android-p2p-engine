@@ -4,6 +4,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
+        maven{
+            url 'https://maven.swarmcloud.net/repository/maven-releases/'
+        }
     }
 }
 rootProject.name = "Demo_v3"

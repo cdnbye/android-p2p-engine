@@ -17,7 +17,7 @@ import java.lang.RuntimeException
 
 class ExoActivity : BaseActivity() {
     private val hls1 = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-    private val hls2 = "https://stream.swarmcloud.net:2096/hls/sintel/playlist.m3u8"
+    private val hls2 = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/level_0.m3u8"
     private val dash1 = "https://bitmovin-a.akamaihd.net/content/MI20192708/stream.mpd"
     private val dash2 = "https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1.mpd"
 

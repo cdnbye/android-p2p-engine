@@ -12,12 +12,11 @@ This is a demo for CDNBye Android SDK v3.
 Download demo apk [here](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)
 
 ## Requirements
-Android Version Support: Kitkat 4.4(API level >= 19)
+Android Version Support: Kitkat 4.2(API level >= 17)
 
 ## Usage
 - Clone the project
 - Install dependencies by gradle
-- Download the latest version SDK [swarmcloud.jar and datachannel.aar](https://github.com/cdnbye/android-p2p-engine/releases)，then copy it to app/libs
 - Run on real device
 
 ## Issue & Feature Request
