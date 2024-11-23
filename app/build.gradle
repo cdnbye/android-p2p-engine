@@ -55,5 +55,5 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation("com.cdnbye:datachannel_native:1.0.211")
-    implementation("com.cdnbye:p2p_engine:3.9.0")
+    implementation("com.cdnbye:p2p_engine:latest.release")
 }
