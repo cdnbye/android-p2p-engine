@@ -79,7 +79,7 @@ class MenuActivity : FragmentActivity() {
 
     private fun buildListData(): List<ListEntry> {
         return Arrays.asList(
-            ListEntry("EXO", ExoActivity::class.java),
+            ListEntry("Media3 ExoPlayer", ExoActivity::class.java),
         )
     }
 
