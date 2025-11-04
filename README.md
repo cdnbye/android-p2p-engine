@@ -10,7 +10,7 @@ This is a demo for SwarmCloud Android SDK v3.
 Download demo apk [here](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)
 
 ## Requirements
-Android Version Support: Kitkat 4.4(API level >= 19)
+Android Version Support: API level >= 17
 
 ## Usage
 - Clone the project

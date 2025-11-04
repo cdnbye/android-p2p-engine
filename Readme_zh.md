@@ -10,7 +10,7 @@
 下载测试 [demo.apk](https://cdnbye.oss-cn-beijing.aliyuncs.com/android_sdk/demo.apk)
 
 ## 系统要求
-安卓4.4以上版本(API level >= 19)
+安卓4.2以上版本(API level >= 17)
 
 ## 使用方法
 - 将本项目克隆到本地
